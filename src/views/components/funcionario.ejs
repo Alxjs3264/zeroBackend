@@ -1,0 +1,36 @@
+<% componente.options = componente.options.filter(option => option.visible) %>
+<div class="row">
+    <% if (componente.label) { %>
+        <div class="col-xs-12 text-bold"><%- componente.label %></div>
+    <% } else { %>
+        <div class="col-xs-12 text-bold">Datos Personales</div>
+    <% } %>
+</div>
+<%- include('funcionario/datosPesonales.ejs', 
+    {
+        options: componente.options.filter(option => ['tipo_documento', 'nro_documento', 'complemento', 'fecha_nacimiento'].includes(option.name)),
+        value: componente?.value?.valores?.usuario
+    }) %>
+<% if (componente.options.some(option => ['nro_item', 'cargo', 'usuario', 'area', 'nivel'].includes(option.name))) { %>
+    <div class="row" hidden style="display: none;">
+        <div class="col-xs-12 text-bold">Datos de Trabajo</div>
+    </div>
+    <%- include('funcionario/datosTrabajo.ejs', 
+        {
+            options: componente.options.filter(option => ['nro_item', 'cargo', 'usuario', 'area', 'nivel'].includes(option.name)),
+            value: {
+                usuario: componente?.value?.valores?.usuario?.usuario,
+                cargo: componente?.value.valores?.cargo
+            }
+        }) %>
+<% } %>
+<% if (componente.options.some(option => ['telefono', 'celular', 'correo_electronico'].includes(option.name))) { %>
+    <div class="row">
+        <div class="col-xs-12 text-bold">Datos de Contacto</div>
+    </div>
+    <%- include('funcionario/datosContacto.ejs', 
+        {
+            options: componente.options.filter(option => ['telefono', 'celular', 'correo_electronico'].includes(option.name)),
+            value: componente?.value?.valores?.usuario
+        }) %>
+<% } %>

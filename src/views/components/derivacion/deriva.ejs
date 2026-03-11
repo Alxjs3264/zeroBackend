@@ -1,0 +1,19 @@
+<% if (config?.visible && config?.visiblePdf) { %>
+    <div class="col-xs-2 text-bold"><%= title %></div>
+    <div class="col-xs-1 text-center text-bold">:</div>
+    <div class="col-xs-9" style="padding-left: 28px;">
+        <% if (value && Array.isArray(value) && value.length > 0) { %>
+            <% value?.forEach((elemento,index) => { %>
+                <% if (elemento.visiblePdf){ %>
+                    <div class="text-bold"><%= elemento?.usuario?.nombres %> <%= elemento?.usuario?.primerApellido %> <%= elemento?.usuario?.segundoApellido %></div>
+                    <div class="derivacion"><%= elemento?.cargo?.descripcion %></div>
+                <% } %>
+            <% }) %>
+        <% }else{ %>
+            <% if (value.visiblePdf){ %>
+                <div class="text-bold"><%= value?.usuario?.nombres %> <%= value?.usuario?.primerApellido %> <%= value?.usuario?.segundoApellido %></div>
+                <div class="derivacion"><%= value?.cargo?.descripcion %></div>
+            <% } %>
+        <% } %>
+    </div>
+<% } %>

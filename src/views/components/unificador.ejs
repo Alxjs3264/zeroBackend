@@ -1,0 +1,45 @@
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <th scope="col">Operación POA</th>
+            <th scope="col">Presupuesto</th>
+            <th scope="col">Elementos Nuevo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% let total = 0 %>
+        <% let totalDolar = 0 %>
+        <% value?.detalles.forEach((item,index) => { %>
+            <tr>
+                <td>
+                    <p class="text-label">Código:</p>
+                    <p><%= item?.operacion?.ri?.codigo %></p>
+                    <p class="text-label">Descripción:</p>
+                    <p><%= item?.operacion?.ri?.descripcion %></p>
+                </td>
+                <td>
+                    <p class="text-label">Categoría:</p>
+                    <p><%= item?.presupuesto?.categoriaProgramatica?.descripcion %></p>
+                    <% const fuenteOrganismo = `${item?.presupuesto?.fuenteFinanciamiento?.fuente}${item?.presupuesto?.fuenteFinanciamiento?.organismo ? ' ' + item?.presupuesto?.fuenteFinanciamiento?.organismo : ''}` %>
+                    <% const fuenteFinanciamiento = `${fuenteOrganismo} ${item?.presupuesto?.fuenteFinanciamiento?.descripcion}` %>
+                    <p class="text-label">Fuente:</p>
+                    <p><%= fuenteFinanciamiento %></p>
+                    <% const partidaPresupuestaria = `${item?.presupuesto?.partidaPresupuestaria?.codigo} ${item?.presupuesto?.partidaPresupuestaria?.descripcion}` %>
+                    <p class="text-label">Partida:</p>
+                    <p><%= partidaPresupuestaria %></p>
+                    <% if (item?.presupuesto?.da) { %>
+                       <p class="text-label">Dirección Administrativa:</p>
+                       <% const da = `(${item?.presupuesto?.da?.codigo}) ${item.presupuesto?.da?.nombre}` %>
+                       <p><%= da %></p>
+                    <%}%>
+                </td>
+                <td>
+                    <p class="text-label">Item:</p>
+                    <p><%= item?.presupuesto.partidaPresupuestaria.descripcion %></p>
+                    <p class="text-label">Monto Unificado:</p>
+                    <p><%= item?.presupuesto.monto %></p>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

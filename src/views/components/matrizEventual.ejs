@@ -1,0 +1,148 @@
+<h3><b>Informacion de Modificacion a la Matriz de Personal Eventual</b></h3>
+<div class="text-label">Categoria Programatica</div>
+<p class=""><%- value.registro.categoriaProgramatica.descripcion %></p>
+<div class="text-label">Fuente y Organismo Financiador</div>
+<p class=""><%- value.fuente.codigo %> <%- value.fuente.descripcion %></p>
+<div class="text-label">Unidad Organizacional</div>
+<p class=""><%- value.registro.area.nombreArea %></p>
+
+<h4 class="text-success"><b>Matriz de Personal Eventual Vigente</b></h4>
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <th scope="col">Nivel Puesto</th>
+            <th scope="col">Cargo</th>
+            <th scope="col">Información</th>
+            <th scope="col">Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% value?.registros.forEach((item,index) => { %>
+            <tr>
+                <td >
+                    <p class="text-label">Nivel:</p>
+                    <p><%= item?.nivelSalarial %></p>
+                    <p class="text-label">Puesto:</p>
+                    <p><%= item?.denominacionPuesto %></p>
+                </td>
+                <td>
+                    <p class="text-label">Código:</p>
+                    <p>
+                        <% if(item.codigo){ %>
+                            <span  class="label label-default"><%= item?.codigo %></span>
+                        <% } %>
+                        <% if(item.modificado){ %>
+                            <span  class="label label-danger">MODIFICADO</span>
+                        <% } %>
+                    </p> 
+                    <p class="text-label">Denominacion:</p>
+                    <p><%= item?.denominacionCargo %></p>
+                    <p class="text-label">Objetivo:</p>
+                    <p><%= item?.objetivo %></p>
+                </td>
+                <td>
+                    <p class="text-label">Duracion (Mes):</p>
+                    <p><%= item?.duracionContrato %></p>
+                    <% if(item?.haberBasico){ %>
+                        <p class="text-label">Haber Basico:</p>
+                        <p><%= item?.haberBasico %> Bs.</p>
+                    <% } %>
+                </td>
+                <td>
+                    <% if(item?.haberBasico){ %>
+                        <p class="text-label">Costo Mensual:</p>
+                        <p><%= item?.costoMensual %> Bs.</p>
+                    <% } %>
+                    <p class="text-label">Monto Total:</p>
+                    <p><%= item?.monto %> Bs.</p>
+                    <p class="text-label">Saldo Actual:</p>
+                    <p><%= item?.saldo %> Bs.</p>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td><b> TOTAL SALDO:</b></td>
+            <td colspan="2" style="font-size: 15px;"><%= value.totalSaldo %> Bs.</td>
+        </tr>
+    </tfoot>
+</table>
+<br/>
+<h4 class="text-warning"><b>Modificaciones Solicitadas</b></h4>
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <th scope="col">Nivel Puesto</th>
+            <th scope="col">Cargo</th>
+            <th scope="col">Información</th>
+            <th scope="col">Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% value?.modificaciones.forEach((item,index) => { %>
+            <tr class="<%= item.tipoRegistro==='nuevo'?'success':'warning' %>">
+                <td>
+                    <p class="text-label">Nivel:</p>
+                    <p><%= item?.nivelSalarial %></p>
+                    <p class="text-label">Puesto:</p>
+                    <p><%= item?.denominacionPuesto %></p>
+                </td>
+                <td>
+                    <% if(item.codigo){ %>
+                        <p class="text-label">Código:</p>
+                        <p><span  class="label label-default"><%= item?.codigo %></span></p> 
+                    <% } %>
+                    <p class="text-label">Denominacion:</p>
+                    <p><%= item?.denominacionCargo %></p>
+                    <p class="text-label">Objetivo:</p>
+                    <p><%= item?.objetivo %></p>
+                </td>
+                <td>
+                    <p class="text-label">Duracion (Mes):</p>
+                    <p><%= item?.duracionContrato %></p>
+                    <% if(item.tipoRegistro==='nuevo'){ %>
+                        <p class="text-label">Duracion (Dias):</p>
+                        <p><%= item?.duracionDias %></p>
+                    <% } %>
+                    <p class="text-label">Haber Basico:</p>
+                    <p><%= item?.haberBasico %> Bs.</p>
+                </td>
+                <td>
+                    <p class="text-label">Costo Mensual:</p>
+                    <p><%= item?.costoMensual %> Bs.</p>
+                    <% if(item.tipoRegistro==='modificacion'){ %>
+                        <p class="text-label text-success">Saldo Actual:</p>
+                        <p><%= (item.saldo - item.montoSolicitado).toFixed(2) %> Bs.</p>
+                    <% } %>
+                    <% if(item.tipoRegistro==='nuevo'){ %>
+                        <p class="text-label text-primary">Monto Total:</p>
+                        <p><%= item?.monto %> Bs.</p>
+                        <% } %>
+                    <% if(item.tipoRegistro==='modificacion'){ %>
+                    <p class="text-label text-danger">Monto Solicitado:</p>
+                    <p><%= item?.montoSolicitado %> Bs.</p>
+                    <% } %>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td><b> TOTAL SOLICITADO:</b></td>
+            <td colspan="2" style="font-size: 15px;"><%= value.totalSolicitado %> Bs.</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><b> TOTAL ASOCIADO:</b></td>
+            <td colspan="2" style="font-size: 15px;"><%= value.totalAsignado %> Bs.</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><b> SALDO:</b></td>
+            <td colspan="2" style="font-size: 15px;"><%= value.totalSolicitado - value.totalAsignado %> Bs.</td>
+        </tr>
+    </tfoot>
+</table>

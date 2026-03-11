@@ -1,0 +1,37 @@
+'use strict';
+
+const {
+  setTimestampsSeeder
+} = require('../lib/util');
+const { Ids } = require('../../common/config/constants');
+
+// Datos de pruebas
+let items = [
+  { id: '278d4cdf-0a0e-4916-a544-c20b39cdebd3', id_usuario: Ids.usuarios.personalMjti, id_area: Ids.areas['DIRECCIÓN GENERAL DE DEFENSA DE LOS DERECHOS DEL USUARIO Y CONSUMIDOR'] },
+  { id: 'aceeaefc-a458-4057-a02b-6362b56ef817', id_usuario: Ids.usuarios.personalMjti1, id_area: Ids.areas['DIRECCIÓN GENERAL DE ASUNTOS ADMINISTRATIVOS'] },
+  { id: 'ef085e70-e744-4274-a0c7-736768fed312', id_usuario: Ids.usuarios.personalMjti2, id_area: Ids.areas['VICEMINISTERIO DE JUSTICIA Y DERECHOS FUNDAMENTALES'] },
+  { id: 'e2d10f52-1dbb-4a5d-96a3-9e288324f44d', id_usuario: Ids.usuarios.personalMjti3, id_area: Ids.areas['UNIDAD ADMINISTRATIVA'] },
+  { id: '67617e49-8f9f-4ecb-903f-c378261a212b', id_usuario: Ids.usuarios.personalMjti4, id_area: Ids.areas['UNIDAD DE RECURSOS HUMANOS'] },
+  { id: 'fe8405ea-ec1d-45c2-b081-2b60e0dfc6fa', id_usuario: Ids.usuarios.personalMjti5, id_area: Ids.areas['AREA DE TECNOLOGIAS DE LA INFORMACION Y COMUNICACION'] },
+  { id: 'c7561fb4-0db6-4719-91ca-abe06baeaa8c', id_usuario: Ids.usuarios.personalMjti6, id_area: Ids.areas['UNIDAD DE SERVICIOS INTEGRALES DE JUSTICIA PLURINACIONAL'] },
+  { id: '73204297-ff29-4588-9618-8e5c178c31f2', id_usuario: Ids.usuarios.personalMjti7, id_area: Ids.areas['AREA DE JUSTICIA Y ANALISIS NORMATIVO'] },
+  { id: '7b1256cc-4963-4ca5-bd94-908240f8d466', id_usuario: Ids.usuarios.personalMjti8, id_area: Ids.areas['AREA DE JUSTICIA Y ANALISIS NORMATIVO'] },
+  { id: 'e04bea22-c186-4507-bdcb-774ac5cf0484', id_usuario: Ids.usuarios.ciudadania1, id_area: Ids.areas['AREA DE JUSTICIA Y ANALISIS NORMATIVO'] },
+  { id: 'b95d1547-fe4e-4054-8eb9-17223f19a7d0', id_usuario: Ids.usuarios.ciudadania2, id_area: Ids.areas['AREA DE JUSTICIA Y ANALISIS NORMATIVO'] },
+  { id: '2e54f540-7e9d-4af1-93df-61dd46544d38', id_usuario: Ids.usuarios.ciudadania3, id_area: Ids.areas['UNIDAD DE PARTICIPACION Y CONTROL SOCIAL Y ACCESO A LA INFORMACION'] },
+];
+
+items = setTimestampsSeeder(items);
+
+module.exports = {
+  up (queryInterface, Sequelize) {
+    return queryInterface.bulkInsert('sys_area_usuario', items, {})
+      .then(async () => {})
+      .catch(error => {
+        if (error.message.indexOf('already exists') > -1) return;
+        console.error(error);
+      });
+  },
+
+  down (queryInterface, Sequelize) {}
+};

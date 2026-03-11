@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <%- include('./css/font.ejs') %>
+  <%- include('./css/bootstrap.ejs') %>
+  <title>PDF</title>
+  <style>
+    body {
+        font-family: Poppins,-apple-system,Helvetica Neue,Helvetica,Arial,sans-serif;
+        font-size: 15px;
+    }
+    .subtitle, .title {
+        font-weight: bold;
+        margin: 0 0 10px;
+    }
+    .title {
+        font-size: 29px;
+        line-height: 35px;
+        font-weight: bold;
+    }
+    .subtitle {
+        font-size: 23px;
+        font-weight: bold;
+        line-height: 29px;
+    }
+    .text-bold {
+        font-weight: 700;
+    }
+    .text-h4 {
+        font-size: 34px;
+        font-weight: 400;
+        letter-spacing: .00735em;
+        line-height: 40px;
+    }
+    .q-separator--horizontal {
+        display: block;
+        height: 2px;
+    }
+    .q-separator {
+        background: black;
+        border: 0;
+        flex-shrink: 0;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        transition: background .3s,opacity .3s;
+    }
+    .text-h50 {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: left;
+      text-justify: center;
+    }
+    .text-h51 {
+      font-size: 12px;
+      font-weight: normal;
+      text-align: left;
+      text-justify: center;
+    }
+    .text-h60 {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: right;
+      text-justify: center;
+    }
+    .text-h61 {
+      font-size: 12px;
+      font-weight: normal;
+      text-align: right;
+      text-justify: center;
+    }
+    .text-h70 {
+      font-size: 11px;
+      font-weight: bold;
+      text-align: center;
+      text-justify: center;
+    }
+    .text-h71 {
+      font-size: 11px;
+      font-weight: normal;
+      text-align: center;
+      text-justify: center;
+    }
+    .text-h72 {
+      font-size: 11px;
+      font-weight: normal;
+      text-align: right;
+      text-justify: center;
+    }
+    .text-bold {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="col-xs-6">
+          <img src=<%=solicitud.logo1%>
+          style="margin-bottom:20px;display: block;margin-right: auto;margin-right: auto;width: 200px;"
+          alt="Logo" width="100">
+      </div>
+      <div class="text-h60">
+        <div class="text-h60">
+        SIPFA
+        <br />
+        Sistema Integrado de Planificación, Financiera y Administración
+        </div>
+      </div>
+      <div class="text-h61">
+        <br />
+        La Paz, <%- solicitud.fechaSolicitud %>
+        <br />
+        Nro. Solicitud: <spa class="text-bold"> <%- solicitud.id %> </spa>
+        <br />
+        Tipo de Solicitud: <spa class="text-bold"> <%- solicitud.tipoSolicitud.nombre %> </spa>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="text-51">
+        Señor(a):
+        Lic. JORGE VALENTIN LOPEZ ARENAS
+        <br />
+        <spa class="text-bold">DIRECTOR (A) GENERAL DE ASUTOS ADMINISTRATIVOS
+          <br />
+          MINISTERIO DE JUSTICIA Y TRANSPARENCIA INSTITUCIONAL
+        </spa>
+          <br />
+          <u>Presente.-</u>
+      </div>
+    </div>
+    <div class="col-xs-12 text-right">
+      <br />
+      <br />
+      <p class="text-h4 text-bold">REF.: SOLICITUD DE INICIO DE PROCESO DE CONTRATACIÓN</p>
+    </div>
+
+    <div class="col-xs-12">
+      <div class="subtitle"> TIPO DE SOLICITUD: <%- solicitud.tipoSolicitud.nombre %> </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="text-justify">
+        <p> De mi consideración: </p>
+        <p> En el marco del Decreto Supremo N° 181 de fecha 28 de junio de 2009
+          "Normas Básicas del Sistema de Administración de Bienes y Servicios", sus modificaciones
+          y la normativa de contrataciones vigente, solicito autorice el inicio del Proceso de
+          Contratación, bajo la modalidad de: <spa style="font-weight: bold"><%- solicitud.objetoContratacion %></spa>
+        </p>
+      </div>
+    </div>
+  </div>
+  <br />
+  <table style="width: 100%;border-collapse: collapse; float: left; border-style: solid; border: 2;" border="2"
+  cellspacing="10" cellpadding="2">
+  <thead>
+    <tr>
+      <th class="text-center" colspan="18">
+        DETALLE DE LA SOLICITUD
+      </th>
+    </tr>
+    <tr>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70 no-padding no-margin ">Código POA</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70 no-padding no-margin ">Descripción</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70">Fuente</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70">Partida</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70">Unidad Medida</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70">Cantidad</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70">Precio Unitario</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70">Solicitado</p>
+      </th>
+      <th class="tg-0lax" colspan="2">
+        <p class="text-h70">Certificado</p>
+      </th>
+    </tr>
+
+  </thead>
+  <tbody>
+    <% solicitud.detalleSolicitud.forEach(function(resp, index){ %> 
+      <tr>
+        <td class="text-h71" colspan="2" >
+          <%= index+1 %>
+        </td>
+        <td class="text-h71" colspan="2">
+          <%= resp.descripcion %>
+        </td>
+        <td class="text-h71" colspan="2">
+          <%= resp.cantidad %>
+        </td>
+        <td class="text-h71" colspan="2">
+          <%= resp.cantidad %>
+        </td>
+        <td class="text-h71" colspan="2">
+          <%= resp.unidadMedida?.nombre %>
+        </td>
+        <td class="text-h72" colspan="2">
+          <%= resp.cantidad  %>
+        </td>
+        <td class="text-h72" colspan="2">
+          <%= resp.precioUnitario %>
+        </td>
+        <td class="text-h72" colspan="2">
+          <%= resp.montoSolicitado %>
+        </td>
+        <td class="text-h72" colspan="2">
+          <%= resp.montoCertificado %>
+        </td>
+      </tr>
+      <% }); %>
+  </tbody>
+</table>
+<div class="text-51">
+  <br />
+  Para tal Efecto se adjunta la siguiente documentacion:
+  <br />
+  - Especificaciones Técnicas/ Términos de Referencia
+  <br />
+  - Formulario F-MPAC (Si corresponde).
+  <br />
+  <br />
+  Sin otro particular, saludo a usted.
+  <br />
+  Atentamente.-
+</div>
+
+</body>
+</html>

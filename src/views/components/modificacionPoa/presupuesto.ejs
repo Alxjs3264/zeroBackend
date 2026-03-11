@@ -1,0 +1,61 @@
+<% console.log(presupuestos) %>
+<% if (presupuestos.length > 0) { %>
+  <table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+      <tr>
+        <th>DE</th>
+        <th>A</th>
+        <th>Monto a Modificar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const presupuesto of presupuestos) { %>
+        <tr>
+          <td>
+            <p class="text-label">Institución/Unidad Organizacional:</p>
+            <p><%= presupuesto.de?.institucion %></p>
+            <% if (presupuesto.de?.operacion?.id) { %>
+              <p class="text-label">Resultado Intermedio:</p>
+              <p><%= presupuesto.de.operacion.ri.codigo %> <%= presupuesto.de.operacion.ri.descripcion %></p>
+            <% } %>
+            <% if (presupuesto.de?.categoriaProgramatica?.id) { %>
+              <p class="text-label">Categoria Programatica:</p>
+              <p><%= presupuesto.de.categoriaProgramatica.descripcion %></p>
+            <% } %>
+            <% if (presupuesto.de?.partidaPresupuestaria?.id) { %>
+              <p class="text-label">Partida Presupuestaria:</p>
+              <p><%= presupuesto.de.partidaPresupuestaria.codigo %> <%= presupuesto.de.partidaPresupuestaria.descripcion %></p>
+            <% } %>
+            <% if (presupuesto.de?.fuenteFinanciamiento?.id) { %>
+              <p class="text-label">Fuente de Financiamiento:</p>
+              <p><%= presupuesto.de.fuenteFinanciamiento.codigo %><%- presupuesto.de.fuenteFinanciamiento?.organismo ? ' - ' + presupuesto.de.fuenteFinanciamiento.organismo : '' %> <%= presupuesto.de.fuenteFinanciamiento.descripcion %></p>
+            <% } %>
+          </td>
+          <td>
+            <p class="text-label">Institución/Unidad Organizacional:</p>
+            <p><%= presupuesto.a?.institucion %></p>
+            <% if (presupuesto.a?.operacion?.id) { %>
+              <p class="text-label">Resultado Intermedio:</p>
+              <p><%= presupuesto.a.operacion.ri.codigo %> <%= presupuesto.a.operacion.ri.descripcion %></p>
+            <% } %>
+            <% if (presupuesto.a?.categoriaProgramatica?.id) { %>
+              <p class="text-label">Categoria Programatica:</p>
+              <p><%= presupuesto.a.categoriaProgramatica.descripcion %></p>
+            <% } %>
+            <% if (presupuesto.a?.partidaPresupuestaria?.id) { %>
+              <p class="text-label">Partida Presupuestaria:</p>
+              <p><%= presupuesto.a.partidaPresupuestaria.codigo %> <%= presupuesto.a.partidaPresupuestaria.descripcion %></p>
+            <% } %>
+            <% if (presupuesto.a?.fuenteFinanciamiento?.id) { %>
+              <p class="text-label">Fuente de Financiamiento:</p>
+              <p><%= presupuesto.a.fuenteFinanciamiento.codigo %><%- presupuesto.a.fuenteFinanciamiento?.organismo ? ' - ' + presupuesto.a.fuenteFinanciamiento.organismo : '' %> <%= presupuesto.a.fuenteFinanciamiento.descripcion %></p>
+            <% } %>
+          </td>
+          <td>
+            <%= presupuesto.monto %> Bs.
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+<% } %>

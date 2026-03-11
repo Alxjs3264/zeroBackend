@@ -1,0 +1,24 @@
+image: node:16.13.0
+
+stages:
+  - install
+  - build
+
+install-dependencies:
+  stage: install
+  script:
+    - npm install -g pm2
+    - npm install -g yarn
+    - yarn install
+  artifacts:
+    expire_in: 1hr
+    paths:
+      - node_modules/
+  cache:
+    paths:
+      - node_modules
+
+build-spa:
+  stage: build
+  script: 
+    - pm2 start ./src/application/server.js

@@ -1,0 +1,61 @@
+<% if (Array.isArray(value)) { %>
+    <% value.forEach((operacion, index) => { %>
+        <row>
+            <div class="col-xs-12 text-center">
+                <p class="text-bold">Código POA: <%= operacion.resultadoIntermedio.codigo %></p>
+            </div>
+            <% if (config?.estructura[0]?.visible) { %>
+                <%- include('poa/element.ejs', {
+                    config: config?.estructura[0],
+                    value: operacion?.accionMedianoPlazo
+                }) %>
+            <% } %>
+            <% if (config?.estructura[1]?.visible) { %>
+                <%- include('poa/element.ejs', {
+                    config: config?.estructura[1],
+                    value: operacion?.accionCortoPlazo
+                }) %>
+            <% } %>
+            <% if (config?.estructura[2]?.visible) { %>
+                <%- include('poa/element.ejs', {
+                    config: config?.estructura[2],
+                    value: operacion?.resultadoEsperado
+                }) %>
+            <% } %>
+            <% if (config?.estructura[3]?.visible) { %>
+                <%- include('poa/element.ejs', {
+                    config: config?.estructura[3],
+                    value: operacion?.operacion
+                }) %>
+            <% } %>
+            <% if (config?.estructura[4]?.visible) { %>
+                <%- include('poa/element.ejs', {
+                    config: config?.estructura[4],
+                    value: operacion?.resultadoIntermedio
+                }) %>
+            <% } %>
+        </row>
+    <%});%>
+<% } else { %>
+    <div class="row">
+        <div class="col-12 text-center" align="center">
+          <h5 class="text-bold" style="width: auto !important; margin: 8px auto !important; font-weight: bolder;">
+            AMP <%= value?.codigo?.split('.')?.slice(0, 1)?.join('.') || '' %> -
+            ACP <%= value?.codigo?.split('.')?.slice(0, 2)?.join('.') || '' %> -
+            RE <%= value?.codigo?.split('.')?.slice(0, 3)?.join('.') || '' %> -
+            OP <%= value?.codigo?.split('.')?.slice(0, 4)?.join('.') || '' %>
+          </h5>
+          <h5 class="text-bold" style="width: auto !important; margin: 8px auto !important; font-weight: bolder;">
+            <span class="text-bold" style="background: #e0e0e0!important; padding: 2px 8px;">
+                RI <%= value?.codigo %>
+              </span>        
+          </h5>
+        </div>
+        <div class="col-12 q-pb-md">
+            <div class="col-xs-12">
+                <p class="text-bold" style="color: #9e9e9e!important;">Descripción <%= config?.estructura[4]?.nombre %></p>
+                <p class=""><%= value?.descripcion %></p>             
+            </div>
+        </div>
+    </div>
+<% } %>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Poppins, -apple-system, Helvetica Neue, Helvetica, Arial, sans-serif;
+            font-size: 10pt;
+            background: transparent !important;
+            background-color: rgba(255, 255, 255, 0) !important;
+            margin-left: 2cm;
+            margin-right: 2cm;
+        }
+
+        .correlativo {
+            padding-top: 0.5cm;
+        }
+
+        .verificar {
+            margin-left: 2cm;
+            margin-right: 2cm;
+            font-size: 8pt;
+            color: #9e9e9e;
+        }
+
+        div,
+        p {
+            background-color: rgba(255, 255, 255, 0) !important;
+            background: transparent !important;
+        }
+    </style>
+    <script>
+        var pdfInfo = {};
+        var x = document.location.search.substring(1).split('&');
+        for (var i in x) { var z = x[i].split('=', 2); pdfInfo[z[0]] = unescape(z[1]); }
+        function getPdfInfo() {
+            var page = pdfInfo.page || 1;
+            var pageCount = pdfInfo.topage || 1;
+            document.getElementById('pdfkit_page_current').textContent = page;
+            document.getElementById('pdfkit_page_count').textContent = pageCount;
+        } 
+    </script>
+</head>
+
+<body onload="getPdfInfo()">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-4" style="border-top: 8px solid #bf4732;"></div>
+                <div class="col-xs-4" style="border-top: 8px solid #e9e645;"></div>
+                <div class="col-xs-4" style="border-top: 8px solid #4f8341;"></div>
+            </div>
+        </div>
+        <div class="col-xs-6 text-right pr-4" style="border-right: 4px solid #aea353;">
+            <strong><%=entidad%></strong><br>
+            <%=ubicacion%><br>
+            Teléfonos: <%=contacto%>
+        </div>
+    </div>
+    <% if (tipo=='8c55af21-3269-4fb4-8621-c46058cdafa5' ){ %>
+    <div class="row verificar">
+        <div class="col-xs-12 text-center">
+            <span id="pdfkit_page_current"></span> de <span id="pdfkit_page_count"></span>
+        </div>
+    </div>
+    <% } %>
+    <div class="row verificar">
+        <% if (!docFisico){ %>
+            <div class="col-xs-12 text-center">
+                Este documento puede ser verificado en <%= frontVerificarUrl %>
+            </div>
+        <% } else {%>
+            <div class="col-xs-12 text-center">
+                Este documento debera ser verificado de forma fisica %>
+            </div>
+        <% } %>
+    </div>
+</body>
+
+</html>

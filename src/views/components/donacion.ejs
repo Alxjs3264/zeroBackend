@@ -1,0 +1,54 @@
+<%
+function commify(n) {
+    if (n) {
+        const parts = n.toString().split(".");
+        const numberPart = parts[0];
+        const decimalPart = parts[1];
+        const thousands = /\B(?=(\d{3})+(?!\d))/g;
+        return numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "");
+    }
+    return '';
+}
+%>
+
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <th scope="col">Unidad Organizacional Beneficiaria</th>
+            <th scope="col">Presupuesto</th>
+            <th scope="col">Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% let total = 0 %>
+        <% value?.detalles.forEach((item,index) => { %>
+            <tr>
+                <td>
+                    <p class="text-label">Sigla:</p>
+                    <p><%= item?.unidadOrganizacional?.sigla %></p>
+                    <p class="text-label">Unidad Organizacional:</p>
+                    <p><%= item?.unidadOrganizacional?.nombre_area %></p>
+                </td>
+                <td>
+                    <% const partidaPresupuestaria = `${item?.partidaPresupuestaria?.codigo} ${item?.partidaPresupuestaria?.descripcion}` %>
+                    <p class="text-label">Partida:</p>
+                    <p><%= partidaPresupuestaria %></p>
+                    <p class="text-label">Categoría:</p>
+                    <p><%= item?.categoriaProgramatica?.descripcion %></p>
+                </td>
+                <td>
+                    <p class="text-label">Importe:</p>
+                    <%const solicitado = commify(item?.importe)%>
+                    <% total += parseFloat(item?.importe) %>
+                    <p><%= solicitado %> Bs.</p>
+                </td>
+            </tr>
+        <% }) %>
+        <tr>
+            <td></td>
+            <td></td>
+            <%const totales = commify(total)%>
+            <td>Total: <%= totales %></td>            
+        </tr>
+    </tbody>
+</table>

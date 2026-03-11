@@ -1,0 +1,40 @@
+<table class="table table-bordered" style="font-size: 12px;">
+  <thead>
+    <tr>
+      <th>Acción a Mediado Plazo</th>
+      <th>Acción a Corto Plazo</th>
+      <th>Resultado Esperado</th>
+      <th>Operación</th>
+      <th>Resultado Intermedio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%
+    const result = {}
+    const table = []
+    let ops = [...operaciones]
+    while (ops.length > 0) {
+      const operacion = ops.pop()
+      if (operacion?.children) {
+        result[operacion.codigo] = operacion.children.length
+        const codigo = operacion.codigo.split('.')
+        const codigoPadre = []
+        for (let index = 1; index < codigo.length; index++) {
+          codigoPadre.push(codigo[index - 1])
+          let children = result[operacion.codigo] - 1
+          children = children > 0 ? children : 0
+          result[codigoPadre.join('.')] += children
+        }
+        ops = [...ops, ...operacion.children]
+      }
+    }
+    %>
+    <% console.log(result) %>
+    <% console.log(operaciones.length) %>
+    <% for (const operacion of operaciones) { %>
+      <tr>
+        <%- include('modificacionPoa/data.ejs', { operacion: operacion, result: result, nivel: 1, cerrar: false }) %>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

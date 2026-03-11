@@ -1,0 +1,23 @@
+<%
+function nombreCompleto(user) {
+  const nombreCompleto = [getValue(config.nombre, user), getValue(config.primerApellido, user), getValue(config.segundoApellido, user)]
+  return nombreCompleto.join(' ')
+}
+function getValue(configuration, user) {
+  try {
+    const keys = configuration.split('.')
+    let value = JSON.parse(JSON.stringify(user))
+    for (const key of keys) value = value[key]
+    return value
+  } catch (e) {
+    return ''
+  }
+}
+%>
+<div class="col-xs-9">
+  <div class="text-bold"><%= nombreCompleto(value) %></div>
+  <div class="derivacion"><%= getValue(config.cargo, value) %></div>
+  <% if (config.entidadVisible) { %>
+    <div class="derivacion"><%= getValue(config.entidad, value) %></div>
+  <% } %>
+</div>

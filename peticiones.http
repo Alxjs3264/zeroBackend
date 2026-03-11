@@ -1,0 +1,68 @@
+
+@baseUrl = http://localhost:3000
+@rdpVersion = api
+
+### Login
+# @name loginResponse
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "usuario": "9248643",
+  "contrasena": "Developer"
+}
+
+#### Variable Response
+@accessToken = {{ loginResponse.response.body.$.datos.token }}
+
+
+### Listado de asignacion de cargos
+GET {{baseUrl}}/api/system/usuario-cargo
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### BANDEJAS
+### Listado
+GET {{baseUrl}}/api/gestion/flujos-derivacion?idUsuarioDestinatario=7171272e-b31b-4c34-9220-9f535c958c5c&bandeja=firma
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+
+
+### FLUJOS DOCUMENTALES
+### Listado
+GET {{baseUrl}}/api/gestion/flujo-documental?codigoFlujo=3
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### Recuperar por ID
+GET {{baseUrl}}/api/gestion/flujo-documental/9bd7eb0b-6e9c-4cea-beeb-736f1b0b7961
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### NOTIFICACION APROBACION DE DOCUMENTOS CIUDADANIA DIGITAL
+@uuidTramite = a8d9679f-d9e0-4969-bcc3-194265c3d3f9
+
+@postSecret = 11602ae4eef899b8a078871b95b97a8a2ca6c23cde078f209fd508be9866e6c371d382a59a8dd7ad61621aebd002849ca30bac1d027ded28847da08092b6c511
+
+POST {{baseUrl}}/ciudadania/aprobacion
+Content-Type: application/json
+Authorization: {{postSecret}}
+
+{
+  "aceptado": false,
+  "introducido": true,
+  "requestUuid": "{{uuidTramite}}",
+  "codigoOperacion": "{{$guid}}",
+  "mensaje": "COMPLETADO DE PRUEBAS",
+  "transaction_id": "{{$guid}}",
+  "fechaHoraSolicitud": "{{$timestamp}}",
+  "hashDatos": "53b9f4e881e3b097b4e58e79fed7a93bcd5c21ca991c7387f492adccb548d962",
+  "ci": "7039950"
+}
+
+###

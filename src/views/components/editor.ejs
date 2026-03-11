@@ -1,0 +1,14 @@
+<%
+    let contenido = componente.value.valores
+    if (contenido && shortCodes) {
+        for (const key in shortCodes) {
+            contenido = contenido.replaceAll(key, shortCodes[key] ?? '')
+        }
+    }
+%>
+<div class="text-justify" style="padding:0 30px 15px 15px; width:100%; word-wrap: break-word;">
+    <% if (componente?.label){ %>
+        <p> <%- componente?.label %></p>
+    <% }%>
+    <%- contenido %>
+</div>

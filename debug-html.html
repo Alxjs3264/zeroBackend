@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>PDF</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+
+
+
+    <style>
+        body {
+            font-family: Poppins,-apple-system,Helvetica Neue,Helvetica,Arial,sans-serif;
+            font-size: 13pt;
+            line-height: 1.5;
+            margin-left: 4cm;
+            margin-right: 3cm;
+        }
+    </style>
+
+
+    <style>
+        .text-justify {
+          text-align: justify !important;
+        }
+
+        hr.salto{
+            page-break-before: always;
+        }
+        .form-check {
+            border: 1px solid #e4e6ef;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 4px 4px 0 0;
+            height: 100%!important;
+        }
+        .form-check-inline {
+            display: inline-block;
+            align-items: center!important;
+            height: 40px;
+            padding-top: 9px;
+            padding-bottom: 9px;
+            height: 100%!important;
+        }
+        .center {
+            display: inline-block;
+            vertical-align: middle;
+            height: 40px;
+        }
+        .q-radio__bg {
+            fill: #023859;
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+        }
+        .q-radio__bg_not_selected {
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+            fill: rgba(0, 0, 0, 0.54);
+        }
+        .q-checkbox__bg {
+            fill: #023859;
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+        }
+        .q-checkbox__bg_not_selected {
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+            fill: rgba(0, 0, 0, 0.54);
+        }
+        .subtitle, .title {
+            font-weight: bold;
+            margin: 0 0 10px;
+        }
+        .title {
+            font-size: 29px;
+            line-height: 35px;
+            font-weight: bold;
+        }
+        .subtitle {
+            font-size: 23px;
+            font-weight: bold;
+            line-height: 29px;
+        }
+        .text-bold {
+            font-weight: 700;
+        }
+        .text-h4 {
+            font-size: 20pt;
+            font-weight: 700;
+            letter-spacing: .009em;
+        }
+        .q-separator--horizontal {
+            display: block;
+            height: 2px;
+        }
+        .q-separator {
+            background: black;
+            border: 0;
+            flex-shrink: 0;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            transition: background .3s,opacity .3s;
+        }
+        .text-label{
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .cargo{
+            margin-bottom: 0px;
+        }
+        .derivacion{
+            margin-bottom: 10px;
+        }
+        ul { padding: 0; margin: 0; }
+        .q-li {
+            box-sizing: border-box;
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        table { page-break-inside:auto; width: 100%; height: 100%; }
+        tbody tr { page-break-inside:avoid !important; page-break-after:auto !important }
+        thead { display:table-header-group }
+        tfoot { display:table-footer-group }
+        .text-oculto{
+            display: none;
+        }
+        .enlace{
+            padding-bottom: 1.5rem;
+        }
+        .enlace .caption{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-clamp: 1;
+            -webkit-line-clamp: 1;
+        }
+    </style>
+</head>
+
+
+<body>
+    <section id="render-container">
+        
+        
+        
+        
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                <p class="text-h4 text-bold">NOTA INTERNA</p>
+                </div>
+            </div>
+        
+    
+        <div class="row">
+        
+            <!-- <pre>
+                derivacion
+            </pre> -->
+    
+            
+    
+            
+    
+            
+
+    <div class="col-xs-12">
+        <div class="row">
+
+    
+            
+                <div class="col-xs-12">
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                        <div class="row">
+    
+    
+    <div class="col-xs-2 text-bold">Para</div>
+    <div class="col-xs-1 text-center text-bold">:</div>
+    <div class="col-xs-9" style="padding-left: 28px;">
+        
+            
+                
+                    <div class="text-bold">usuario3 prueba prueba</div>
+                    <div class="derivacion">cargo prueba</div>
+                
+            
+        
+    </div>
+
+    
+        
+    
+    
+        
+    <div class="col-xs-2 text-bold">De</div>
+    <div class="col-xs-1 text-center text-bold">:</div>
+    <div class="col-xs-9" style="padding-left: 28px;">
+        
+            
+                
+                    <div class="text-bold">usuario1 prueba segundo sepdavi</div>
+                    <div class="derivacion">CARGO PRUEBA DGE</div>
+                
+            
+        
+    </div>
+
+    
+
+    <div class="col-xs-2 text-bold">Referencia</div>
+    <div class="col-xs-1 text-center text-bold">:</div>
+    <div class="col-xs-9 text-justify" style="padding-left: 28px;">prueba nota interna, cite con area</div>
+</div>
+<hr class="q-separator q-separator--horizontal q-my-md" aria-orientation="horizontal">
+
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+                      
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                       
+    
+                    
+    
+    
+                       
+                </div>
+            
+        
+            <!-- <pre>
+                title
+            </pre> -->
+    
+            
+    
+            
+    
+            
+        </div>
+    </div>
+
+
+    <div class="col-xs-12">
+        <div class="row">
+
+    
+            
+                <div class="col-xs-12">
+    
+                    
+                        <div class="normal" style="margin-bottom:10px;">De mi mayor consideracion:</div>
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+                      
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                       
+    
+                    
+    
+    
+                       
+                </div>
+            
+        
+            <!-- <pre>
+                editor
+            </pre> -->
+    
+            
+                
+        </div>
+    </div>
+
+
+                
+<div class="text-justify" style="padding:0 30px 15px 15px; width:100%; word-wrap: break-word;">
+    
+    <p>En atención a la Hoja de Ruta MJTI-RPA-21660/2021 derivado en fecha 13 de agosto del 2021 cuyo contenido cuenta con una Nota Interna MJTI-DESP-N° 29/2021 del 03 de julio de 2021, referente a la actualización de datos, se realizó las siguientes acciones:</p><p>Conforme a la autorización descrita en la nota anteriormente mencionada por la Dirección General del Registro Público de la Abogacía se realizó la actualización automática (ejecución de script) de 2201 datos de personas, 339 registros de abogados fallecidos y 502 registros de personas con complemento visible. los mismos son descritos en la Nota Interna MJTI-DGAA-ATIC-91/2021 adjuntada en la presente.</p><p>En cuanto a la integridad de la información se realizó el backup de la base de datos antes y después de la actualización de los registros los mismos son adjuntados a la presente en CD, así como los scripts ejecutados.</p>
+</div>
+                
+            
+    
+            
+    
+            
+
+    <div class="col-xs-12">
+        <div class="row">
+
+    
+            
+                <div class="col-xs-12">
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+                      
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                       
+    
+                    
+    
+    
+                       
+                </div>
+            
+        
+            <!-- <pre>
+                title
+            </pre> -->
+    
+            
+    
+            
+    
+            
+        </div>
+    </div>
+
+
+    <div class="col-xs-12">
+        <div class="row">
+
+    
+            
+                <div class="col-xs-12">
+    
+                    
+                        <div class="normal" style="margin-bottom:10px;">Sin otro particular me despedido, con las consideraciones más distinguidas.</div>
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+                      
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+                    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                    
+    
+                       
+    
+                    
+    
+    
+                       
+                </div>
+            
+        
+    
+        
+        </div>
+    </div>
+
+
+    
+        
+            
+        
+        </div>
+    </section>
+</body>
+
+</html>

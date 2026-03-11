@@ -1,0 +1,7 @@
+<% if (componente?.value?.valores?.nro) { %>
+    <div class="row">
+      <div class="col-xs-12 text-center subtitle">Nro. Pago: <%- componente?.value?.valores?.nro %></div>
+    </div>
+  <% } %>
+  <%- include('pagoDivididos/body.ejs', { value: componente?.value?.valores, config: componente?.configuracion }) %>
+  

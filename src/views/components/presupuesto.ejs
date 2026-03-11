@@ -1,0 +1,71 @@
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <th scope="col">Operación POA</th>
+            <th scope="col">Presupuesto</th>
+            <th scope="col">Item</th>
+            <th scope="col">Monto</th>
+            <% if (['efd6ca02-71b2-412c-a437-162316ac1fb4', '63449bf1-18a9-4eae-b8ae-aff164e27a95'].includes(value?.tipoViaje?.id)) { %>
+                <th scope="col">Monto US$</th>
+            <%}%>
+        </tr>
+    </thead>
+    <tbody>
+        <% value?.detalles.forEach((item,index) => { %>
+            <tr>
+                <td>
+                    <p class="text-label">Código:</p>
+                    <p><%= item?.operacion?.resultadoIntermedio?.codigo %></p>
+                    <p class="text-label">Descripción:</p>
+                    <p><%= item?.operacion?.resultadoIntermedio?.descripcion %></p>
+                </td>
+                <td>
+                    <p class="text-label">Partida:</p>
+                    <p><%= item?.presupuesto?.partidaPresupuestaria?.descripcion %></p>
+                    <p class="text-label">Categoría:</p>
+                    <p><%= item?.presupuesto?.categoriaProgramatica?.descripcion %></p>
+                    <p class="text-label">Fuente:</p>
+                    <p><%= item?.presupuesto?.fuenteFinanciamiento?.descripcion %></p>
+                    <p class="text-label">Saldo:</p>
+                    <p><%= item?.presupuesto?.saldo %></p>
+                </td>
+                <td>
+                    <p class="text-label">Descripción:</p>
+                    <p><%= item?.item?.descripcion %></p>
+                    <p class="text-label">Unidad de Medida:</p>
+                    <p><%= item?.item?.unidadMedida %></p>
+                    <p class="text-label">Cantidad:</p>
+                    <p><%= item?.item?.cantidad %></p>
+                    <p class="text-label">Precio Unitario:</p>
+                    <p><%= item?.item?.precioUnitario %></p>
+                </td>
+                <td>
+                    <p class="text-label">Monto Solicitado:</p>
+                    <p><%= item?.monto?.solicitado %> Bs.</p>
+                    <% if (config?.certificado){%>
+                        <p class="text-label">Monto Certificado:</p>
+                        <p><%= item?.monto?.certificado %> Bs.</p>
+                    <%}%>
+                    <% if (config?.pagado){%>
+                        <p class="text-label">Monto Pagado:</p>
+                        <p><%= item?.monto?.pagado %> Bs.</p>
+                    <%}%>
+                </td>
+                <% if (['efd6ca02-71b2-412c-a437-162316ac1fb4', '63449bf1-18a9-4eae-b8ae-aff164e27a95'].includes(value?.tipoViaje?.id)) { %>
+                    <td>
+                        <p class="text-label">Monto Solicitado:</p>
+                        <p><%= item?.montoDolar?.solicitado %> US$.</p>
+                        <% if (config?.certificado){%>
+                            <p class="text-label">Monto Certificado:</p>
+                            <p><%= item?.montoDolar?.certificado %> US$.</p>
+                        <%}%>
+                        <% if (config?.pagado){%>
+                            <p class="text-label">Monto Pagado:</p>
+                            <p><%= item?.montoDolar?.pagado %> US$.</p>
+                        <%}%>
+                    </td>
+                <% } %>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

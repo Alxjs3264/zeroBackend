@@ -1,0 +1,1852 @@
+openapi: 3.0.1
+info:
+  description: "Servicios web para sistema de gestión documental."
+  version: "1.0.0"
+  title: "GESTIÓN DOCUMENTAL - MJTI"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+- name: "usuarios"
+  description: "Listado reducido de usuarios"
+- name: "documentoInterno"
+  description: "Inicio del flujo de gestión documental para documentos internos."
+- name: "documentoInternoSearch"
+  description: "Permite listar documentos internos"
+- name: "bandejaDocumentos"
+  description: "Bandeja de documentos de cada usuario"
+- name: "despacharDocumentoInterno"
+  description: Despachar documento interno confirmando su creación
+- name: "aceptarDocumentoInterno"
+  description: Acepta la revisión de un documento interno.
+- name: "observacionDocumentoInterno"
+  description: Observación o consulta para un documento interno.
+- name: "derivarDocumentoInterno"
+  description: Derivación de documento interno
+- name: "vistoBuenoCreacion"
+  description: Visto bueno cuando un usuario es vía de la ceración de un documento interno.
+- name: "vistoBuenoDerivacion"
+  description: Visto bueno cuando un usuario es vía de la derivación de un documento interno.
+- name: "archivarDocumentoInterno"
+  description: Archiva un documento interno.
+- name: "cerrarDocumentoInterno"
+  description: Cierra un documento interno.
+- name: "archivoAdjunto"
+  description: Obtiene el contenido un archivo adjunto
+- name: "historialFlujo"
+  description: Obtiene el historial completo de un flujo documental
+- name: "categoriasFlujo"
+  description: Obtiene una lista de las categorías de flujos documentales archivados.
+- name: "iopToken"
+  description: Creación y listado de tokens de interoperabilidad para sistemas externos.
+
+paths:
+  /system/usuariosSearch:
+    get:
+      tags:
+        - "usuarios"
+      summary: "Obtiene una lista reducida de usuarios en el sistema"
+      description: Realiza el listado reducido de usuarios dados los criterios de búsqueda en los parámetros.
+      parameters:
+      - name: nombre
+        in: query
+        description: Nombres de la persona
+        required: false
+        schema:
+          type: string
+          example: Marcos Quintalla
+      - name: area
+        in: query
+        description: Nombre del área a la que pertenece el usuario 
+        required: false
+        schema:
+          type: string
+          example: Asuntos jurídicos
+      - name: cargo
+        in: query
+        description: Cargo del funcionario
+        required: false
+        schema:
+          type: string
+          example: jefe de unidad
+      - name: estado
+        in: query
+        description: Estado del usuario
+        schema:
+          type: string
+          enum:
+            - ACTIVO
+            - INACTIVO
+          
+      responses:
+        200:
+          description: Usuarios listados correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/usuarioReducido"
+
+  ###################### Documentos INTERNOS ########################
+  /gestion/documentoInterno:
+    post:
+      tags:
+        - "documentoInterno"
+      summary: "Crea un nuevo documento interno."
+      description: Crea un documento interno para iniciar o continuar el flujo de gestión documental. El campo `citeDocumentoPadre` es para especificar que este documento es la continuación, el documento nuevo pertenecerá al **mismo flujo documental**. Para iniciar un nuevo flujo **no se debe enviar** este campo. A menos que se envíe el campo **guardar** como `true` el documento no tendrá CITE y se guarda como borrador hasta que se aplique la acción despachar documento. Si se envía el campo `guardar=true` se genera inmediatamente el cite del documento y se inicia el proceso de aprobación por ciudadanía digital y luego de que el usuario apruebe el documento se devolverá también un `linkRedireccion`.
+ 
+      operationId: crearDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - nombrePlantilla
+              - plantilla
+              - plantillaValor
+              - clasificacion
+              properties:
+                nombrePlantilla:
+                  type: string
+                  example: Solicitud de viáticos de viaje
+                abreviación:
+                  type: string
+                  example: SOLICITUD-VIÁTICOS-VIAJE
+                asunto:
+                  type: string
+                  example: Solicitud de viajes Carlos Perez.
+                plantilla:
+                  description: La estructura de la plantilla, este es un array resultado de la creación de una plantilla usando el **módulo de creación de formularios de la BPM**.
+                  type: object
+                  example:   [{
+                    "validations": [],
+                    "label": "Datos para analizar su caso<br>",
+                    "ariaLabel": null,
+                    "ariaLabelledBy": null,
+                    "customClass": null,
+                    "customStyles": null,
+                    "disabled": false,
+                    "placeholder": null,
+                    "autocomplete": null,
+                    "readonly": false,
+                    "visible": true,
+                    "type": "title",
+                    "typeInput": "title",
+                    "uid": "44946e08-4db6-4f5b-8c9d-631555725243",
+                    "name": "title1",
+                    "required": false,
+                    "active": false,
+                    "designColumn": "col-12"
+                  }, {}]
+                plantillaValor:
+                  description: Valores del llenado del formulario especificado en el campo `plantilla`.
+                  type: object
+                  example:   [{
+                    "validations": [],
+                    "label": "Datos para analizar su caso<br>",
+                    "ariaLabel": null,
+                    "ariaLabelledBy": null,
+                    "customClass": null,
+                    "customStyles": null,
+                    "disabled": false,
+                    "placeholder": null,
+                    "autocomplete": null,
+                    "readonly": false,
+                    "visible": true,
+                    "type": "title",
+                    "typeInput": "title",
+                    "uid": "44946e08-4db6-4f5b-8c9d-631555725243",
+                    "name": "title1",
+                    "required": false,
+                    "active": false,
+                    "designColumn": "col-12"
+                  }, {}]
+                clasificacion:
+                  type: string
+                  enum:
+                    - ABIERTO
+                    - CLASIFICADO
+                    - SOLO PARA REFERENCIAR
+                  description: |
+                    `CLASIFICADO` Solo el remitente, destinatario y vias pueden verlo.
+                    `ABIERTO` Todos los usuarios pueden verlos.
+                    `SOLO PARA REFERENCIAR` Estos documentos se pueden referenciar por cualquier otro documento sin necesidad de aprobación pero no pertenecen a ningún flujo documental por tanto no se pueden derivar.
+                destinatarioEspecifico:
+                  type: string
+                  description: Documento de identidad del destinatario para quien se entrega este documento. Se usa este campo cuando el destinatario es una persona en particular.
+                  example: 5212317 (opcional)
+                destinatarioArea:
+                  type: string
+                  description: Nombre del área de la institución a la que se entrega este documento. Todos los usuarios pertenecientes a esa área especifica lo podrán revisar en su bandeja.
+                  example: ASUNTOS JURÍDICOS (opcional)
+                citeDocumentoPadre:
+                  type: string
+                  description: CITE del documento padre de este documento, **si este campo se proporciona** se entiende que el documento siendo creado es una continuación del documento padre. Ambos documentos pertenecerán al mismo flujo documental.
+                  example: 182-2021/LEGAL (opcional)
+                via:
+                  type: object
+                  properties:
+                    tipo:
+                      type: string
+                      enum:
+                        - CON COPIA
+                        - VISTO BUENO REQUERIDO
+                      description: |
+                        `CON COPIA`: Significa que el usuario puede ver y hacer observaciones pero no es necesario que dé el visto bueno.
+                        `VISTO BUENO REQUERIDO`: Significa que el usuario via debe dar el visto bueno al documento para que el destinatario pueda ver el documento en su bandeja.
+                    numeroDocumentos:
+                      items:
+                        type: array
+                        items:
+                          type: string
+                          example: 12345673
+                      description: Números de documentos de identidad para poner a estos usuarios como **vía**.
+                documentosAdjuntos:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nombre:
+                        type: string
+                        example: Report-22-marzo
+                      contenido:
+                        type: string
+                        example: CadenaBase64........
+                        description: Se espera Cadena base 64
+                      tipo:
+                        type: string
+                        enum:
+                          - pdf
+                          - jpg
+                          - jpeg
+                          - png
+                          - odt
+                          - doc
+                          - docx
+                        description: Tipo de archivo.
+                referencias:
+                  type: array
+                  items:
+                    type: string
+                    example: "MJTI-DGCA-23-2021"
+                  description: CITE de los documentos que se usa como referencias. Solo se puede usar documentos en estado `CERRADO` como referencias.
+                guardar:
+                  type: boolean
+                  example: false
+                  description: Hace que se guarde este documento y se genere un CITE. Si no se envía o es `false` el documento solo tendrá un correlativo y se generará un CITE cuando se despache. Mnadar como `true` hace que se inicie el proceso de aprobación por ciudadanía digital del documento.
+
+      responses:
+        200:
+          description: Documento creado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correlativo:
+                    type: string
+                    example: MJTI-RRHH-12-2021
+                  cite:
+                    type: string
+                    example: MJTI-ATIC-1-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-182-2021/LEGAL
+                  linkRedireccion:
+                    type: string
+                    example: https://demo.gtic.gob.bo/ciudadania-firma/29941-92914919291912
+                    description: Este campo es `null` cuando no se ha hecho el proceso de aprobación.
+        "400":
+          description: Error al documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "'plantillaValor' es un campo obligatorio"
+    put:
+      tags:
+        - "documentoInterno"
+      summary: "Actualiza un nuevo documento interno en estado BORRADOR."
+      description: Actualiza un documento interno siempre y cuando esté en estado `BORRADOR`. Se usa el **correlativo** del documento para identificarlo.
+      operationId: actualizarDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - correlativo
+              - nombrePlantilla
+              - plantilla
+              - plantillaValor
+              - clasificacion
+              properties:
+                correlativo:
+                  type: string
+                  example: UA-1-2021
+                nombrePlantilla:
+                  type: string
+                  example: Solicitud de viáticos de viaje
+                abreviación:
+                  type: string
+                  example: SOLICITUD-VIÁTICOS-VIAJE
+                asunto:
+                  type: string
+                  example: Solicitud de viajes Carlos Perez.
+                plantilla:
+                  description: La estructura de la plantilla, este es un array resultado de la creación de una plantilla usando el **módulo de creación de formularios de la BPM**.
+                  type: object
+                  example:   [{
+                    "validations": [],
+                    "label": "Datos para analizar su caso<br>",
+                    "ariaLabel": null,
+                    "ariaLabelledBy": null,
+                    "customClass": null,
+                    "customStyles": null,
+                    "disabled": false,
+                    "placeholder": null,
+                    "autocomplete": null,
+                    "readonly": false,
+                    "visible": true,
+                    "type": "title",
+                    "typeInput": "title",
+                    "uid": "44946e08-4db6-4f5b-8c9d-631555725243",
+                    "name": "title1",
+                    "required": false,
+                    "active": false,
+                    "designColumn": "col-12"
+                  }, {}]
+                plantillaValor:
+                  description: Valores del llenado del formulario especificado en el campo `plantilla`.
+                  type: object
+                  example:   [{
+                    "validations": [],
+                    "label": "Datos para analizar su caso<br>",
+                    "ariaLabel": null,
+                    "ariaLabelledBy": null,
+                    "customClass": null,
+                    "customStyles": null,
+                    "disabled": false,
+                    "placeholder": null,
+                    "autocomplete": null,
+                    "readonly": false,
+                    "visible": true,
+                    "type": "title",
+                    "typeInput": "title",
+                    "uid": "44946e08-4db6-4f5b-8c9d-631555725243",
+                    "name": "title1",
+                    "required": false,
+                    "active": false,
+                    "designColumn": "col-12"
+                  }, {}]
+                clasificacion:
+                  type: string
+                  enum:
+                    - ABIERTO
+                    - CLASIFICADO
+                    - SOLO PARA REFERENCIAR
+                  description: |
+                    `CLASIFICADO` Solo el remitente, destinatario y vias pueden verlo.
+                    `ABIERTO` Todos los usuarios pueden verlos.
+                    `SOLO PARA REFERENCIAR` Estos documentos se pueden referenciar por cualquier otro documento sin necesidad de aprobación pero no pertenecen a ningún flujo documental por tanto no se pueden derivar.
+                  
+                destinatarioEspecifico:
+                  type: string
+                  description: Documento de identidad del destinatario para quien se entrega este documento. Se usa este campo cuando el destinatario es una persona en particular.
+                  example: 5212317 (opcional)
+                destinatarioArea:
+                  type: string
+                  description: Nombre del área de la institución a la que se entrega este documento. Todos los usuarios pertenecientes a esa área especifica lo podrán revisar en su bandeja.
+                  example: ASUNTOS JURÍDICOS (opcional)
+                citeDocumentoPadre:
+                  type: string
+                  description: CITE del documento padre de este documento, **si este campo se proporciona** se entiende que el documento siendo creado es una continuación del documento padre. Ambos documentos pertenecerán al mismo flujo documental.
+                  example: 182-2021/LEGAL (opcional)
+                via:
+                  type: object
+                  properties:
+                    tipo:
+                      type: string
+                      enum:
+                        - CON COPIA
+                        - VISTO BUENO REQUERIDO
+                      description: |
+                        `CON COPIA`: Significa que el usuario puede ver y hacer observaciones pero no es necesario que dé el visto bueno.
+                        `VISTO BUENO REQUERIDO`: Significa que el usuario via debe dar el visto bueno al documento para que el destinatario pueda ver el documento en su bandeja.
+                    numeroDocumentos:
+                      items:
+                        type: array
+                        items:
+                          type: string
+                          example: 12345673
+                      description: Números de documentos de identidad para poner a estos usuarios como **vía**.
+                documentosAdjuntos:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nombre:
+                        type: string
+                        example: Report-22-marzo
+                      contenido:
+                        type: string
+                        example: CadenaBase64........
+                        description: Se espera Cadena base 64
+                      tipo:
+                        type: string
+                        enum:
+                          - pdf
+                          - jpg
+                          - jpeg
+                          - png
+                          - odt
+                          - doc
+                          - docx
+                        description: Tipo de archivo.
+                referencias:
+                  type: array
+                  items:
+                    type: string
+                    example: "MJTI-DGCA-23-2021"
+                  description: CITE de los documentos que se usa como referencias. Solo se puede usar documentos en estado `CERRADO` como referencias.
+
+      responses:
+        200:
+          description: Documento creado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correlativo:
+                    type: string
+                    example: MJTI-RRHH-12-2021
+                  cite:
+                    type: string
+                    example: null
+                  codigoFlujo:
+                    type: string
+                    example: F-182-2021/LEGAL
+        "400":
+          description: Error al documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "'plantillaValor' es un campo obligatorio"
+    get:
+      tags:
+        - "documentoInterno"
+      summary: "Obteiene un nuevo documento interno."
+      description: Obtiene los detalles de un documento interno.
+      operationId: obtenerDocumento
+      parameters:
+      - name: id
+        in: query
+        description: Identificador del documento
+        required: false
+        schema:
+          type: string
+          example: 5d04500d-2b46-46de-9fee-31654bb54072
+      - name: cite
+        in: query
+        description: Cite del documento siendo buscado
+        required: false
+        schema:
+          type: string
+          example: MJTI-6647643-6-2021
+      responses:
+        200:
+          description: Documento encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "mensaje": "OK",
+                  "finalizado": true,
+                  "datos": {
+                    "fechaEmitido": "01-12-2021 07:50:28",
+                    "fechaAceptado": null,
+                    "fechaCerrado": null,
+                    "id": "e98d6cdd-55f2-4d4f-bfdd-39a27950bf4d",
+                    "idFlujo": "566f917d-6d25-4c2c-b9d7-274c0d174147",
+                    "cite": "MJTI-DGGA-4-2021",
+                    "remitenteDe": "463650b0-40e6-4490-abda-54ec44bd72c3",
+                    "destinatarioEspecifico": "daeccf5c-e4ba-4a27-a1bf-3463d09df201",
+                    "destinatarioArea": null,
+                    "asunto": "Solicitud de viajes, vias VISTO BUENO REQUERIDO2",
+                    "nombrePlantilla": "Solicitud de viáticos de viaje",
+                    "plantilla": [
+                      {
+                        "validations": [],
+                        "label": "Datos para analizar su caso<br>",
+                        "ariaLabel": null,
+                        "ariaLabelledBy": null,
+                        "customClass": null,
+                        "customStyles": null,
+                        "disabled": false,
+                        "placeholder": null,
+                        "autocomplete": null,
+                        "readonly": false,
+                        "visible": true,
+                        "type": "title",
+                        "typeInput": "title",
+                        "uid": "44946e08-4db6-4f5b-8c9d-631555725243",
+                        "name": "title1",
+                        "required": false,
+                        "active": false,
+                        "designColumn": "col-12"
+                      },
+                      {}
+                    ],
+                     "plantillaValor": [
+                       {
+                         "validations": [],
+                         "label": "Datos para analizar su caso<br>",
+                         "ariaLabel": null,
+                         "ariaLabelledBy": null,
+                         "customClass": null,
+                         "customStyles": null,
+                         "disabled": false,
+                         "placeholder": null,
+                         "autocomplete": null,
+                         "readonly": false,
+                         "visible": true,
+                         "type": "title",
+                         "typeInput": "title",
+                         "uid": "44946e08-4db6-4f5b-8c9d-631555725243",
+                         "name": "title1",
+                         "required": false,
+                         "active": false,
+                         "designColumn": "col-12"
+                       },
+                       {}
+                     ],
+                     "firmado": false,
+                     "estado": "NUEVO",
+                     "clasificacion": "CLASIFICADO",
+                     "documentoPadre": null,
+                     "etapaDocumento": 0,
+                     "observaciones": null,
+                     "usuarioCreador": null,
+                     "usuarioRemitente": {
+                       "id": "463650b0-40e6-4490-abda-54ec44bd72c3",
+                       "tipoDocumento": "CI",
+                       "numeroDocumento": "12345671",
+                       "complemento": "",
+                       "usuario": "personalMjti1",
+                       "nombres": "Martin",
+                       "primerApellido": "Marin",
+                       "segundoApellido": "Muelas",
+                       "estado": "ACTIVO"
+                     },
+                     "usuarioDestinatario": {
+                       "id": "daeccf5c-e4ba-4a27-a1bf-3463d09df201",
+                       "tipoDocumento": "CI",
+                       "numeroDocumento": "12345672",
+                       "complemento": "",
+                       "usuario": "personalMjti2",
+                       "nombres": "Menecia",
+                       "primerApellido": "Murales",
+                       "segundoApellido": "Taila",
+                       "estado": "ACTIVO",
+                       "areas": [
+                         {
+                           "id": "a2ab7879-89f7-4cf7-ab28-3a0de3c1e041",
+                           "nombreArea": "VICEMINISTERIO DE JUSTICIA Y DERECHOS FUNDAMENTALES",
+                           "area_usuario": {
+                             "createdAt": "30-11-2021 01:02:46",
+                             "updatedAt": "30-11-2021 01:02:46",
+                             "deletedAt": null,
+                             "id": "ef085e70-e744-4274-a0c7-736768fed312",
+                             "idUsuario": "daeccf5c-e4ba-4a27-a1bf-3463d09df201",
+                             "idArea": "a2ab7879-89f7-4cf7-ab28-3a0de3c1e041",
+                             "userCreated": "7171272e-b31b-4c34-9220-9f535c958c5c",
+                             "userUpdated": null,
+                             "userDeleted": null
+                           }
+                         }
+                       ]
+                     },
+                    "areaDestino": null,
+                    "flujoDocumental": {
+                      "id": "566f917d-6d25-4c2c-b9d7-274c0d174147",
+                      "codigoFlujo": "F-DGGA-4-2021-1638359428",
+                      "tipoFlujo": "INTERNO",
+                      "etapaFlujo": 0,
+                      "nroCopia": 0,
+                      "idFlujoPadre": null,
+                      "estado": null
+                    },
+                    "via": [
+                      {
+                        "id": "da1d40be-99c6-400c-b606-67e55515b4b0",
+                        "tipoDocumento": "CI",
+                        "numeroDocumento": "12345673",
+                        "complemento": "",
+                        "usuario": "personalMjti3",
+                        "nombres": "Turni",
+                        "primerApellido": "Muhia",
+                        "segundoApellido": "Dorian",
+                        "estado": "ACTIVO",
+                        "documentoVia": {
+                          "createdAt": "04-12-2021 14:56:30",
+                          "updatedAt": "04-12-2021 14:56:30",
+                          "deletedAt": null,
+                          "id": "14f9ac07-2512-46fb-b02b-07771bb1417c",
+                          "idDocumento": "5a9e7ca1-87d7-454d-87ff-43c9716b4fde",
+                          "idUsuario": "da1d40be-99c6-400c-b606-67e55515b4b0",
+                          "tipo": "CON COPIA",
+                          "comentario": null,
+                          "vistoBueno": false,
+                          "userCreated": "da1d40be-99c6-400c-b606-67e55515b4b0",
+                          "userUpdated": "8e760c43-10fb-4593-be1e-5801ec1a3427",
+                          "userDeleted": "17f9c2ae-1677-4d68-99f0-faf20fa02e36"
+                        }
+                      },
+                    ],
+                    "referenciaDocumento": [
+                      {
+                        "id": "ac0837a6-87f7-4972-9629-e9cc5aa750d4",
+                        "cite": "MJTI-UA-1-2021",
+                        "asunto": "Solicitud de viajes, COn COPIA",
+                        "clasificacion": "ABIERTO",
+                        "fechaCerrado": "02-12-2021 22:23:46"
+                      }
+                    ],
+                  "archivosAdjuntos": [
+                    {
+                      "id": "202407bd-6df8-4db0-95ce-087a8d87b305",
+                      "idDocumento": "e98d6cdd-55f2-4d4f-bfdd-39a27950bf4d",
+                      "nombre": "doc_RSS-pdf_01122021-075028.pdf",
+                      "extension": "pdf"
+                    }
+                  ]
+                }
+              }
+  /gestion/documentoInternoSearch:
+    get:
+      tags:
+        - "documentoInternoSearch"
+      summary: "Realiza el listado reducido de documentos internos"
+      description: Realiza el listado de documentos internos dados los criterios de búsqueda dados en los parámetros.
+      parameters:
+      - name: cite
+        in: query
+        description: Cite o parte del cite siendo buscado
+        required: false
+        schema:
+          type: string
+          example: MJTI-LEGAL-
+      - name: asunto
+        in: query
+        description: Asunto o parte del asunto del documento
+        required: false
+        schema:
+          type: string
+          example: Solicitud de viajes
+      - name: estado
+        in: query
+        description: estado del documento
+        required: false
+        schema:
+          type: string
+          example: NUEVO
+      - name: remitidoPor
+        in: query
+        description: Documento de identidad del remitente
+        required: false
+        schema:
+          type: string
+          example: 6647643
+      - name: ciDestinatarioEspecifico
+        in: query
+        description: Documento de identidad del destinatario específico
+        required: false
+        schema:
+          type: string
+          example: 9048672
+      - name: areaDestino
+        in: query
+        description: Nombre del área a la que los documentos han sido marcados como destinatarios
+        required: false
+        schema:
+          type: string
+          example: Legal
+      - name: citeDocumentoPadre
+        in: query
+        description: Código del documento padre
+        required: false
+        schema:
+          type: string
+          example: MJTI-LEGAL-8-2021
+      - name: categoria
+        in: query
+        description: Categoría donde se guarda el documento una vez archivado.
+        required: false
+        schema:
+          type: string
+          example: informes
+      responses:
+        200:
+          description: Se han listado los documentos correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/documentoResumido"
+        "405":
+          description: Error al buscar documentos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error parámetros
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "Debe especificar parámetros de búsqueda" 
+  /gestion/bandejaDocumentos:
+    get:
+      tags:
+        - "bandejaDocumentos"
+      summary: "Obtiene la bandeja de documentos correspondiente a cada usuario"
+      description: Realiza el listado de documentos pertenecientes a cada usuario.
+      operationId: bandejaDocumentos
+      parameters:
+      - name: page
+        in: query
+        description: Número de la página
+        required: false
+        schema:
+          type: number
+          example: 1
+      - name: pageSize
+        in: query
+        description: Número máximo de documentos por página.
+        required: false
+        schema:
+          type: number
+          example: 10
+      - name: tipo
+        in: query
+        description: Tipo de bandeja siendo consultada. Si no se proporciona este parametro se devuelven los arrays **entrada, salida, pendientes, borradores, concluidos, via**.
+        required: false
+        schema:
+          type: string
+          enum:
+            - entdada
+            - salida
+            - pendientes
+            - concluidos
+            - borradores
+            - via
+      responses:
+        200:
+          description: Se han listado los documentos correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entrada:
+                    description: Bandeja de documentos que deben ser procesados.
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/documentoResumido"
+                  salida:
+                    description: Bandeja de documentos que deben ser despachados o archivados.
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/documentoResumido"
+                  pendientes:
+                    description: Bandeja de documentos que han sido aceptados y no fueron procesados aún. Esta bandeja solo la tienen los roles; Ministro, Viceministro, Directores, Jefes de unidad.
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/documentoResumido"
+                  borradores:
+                    description: Bandeja de documentos que han el mismo usuario ha creado y tiene como borradores
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/documentoResumido"
+                  concluidos:
+                    description: Bandeja de documentos dirigidos o creados por el usuario y cuyo flujo documental ha concluído.
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/documentoResumido"
+                  via:
+                    description: Bandeja de documentos donde este usuario ha sido incluído como revisor. El usuario tiene la posiblidad de revisar los documentos o agregar observaciones, pero no modificar el flujo.
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/documentoResumido"
+
+  /gestion/despacharDocumentoInterno:
+    post:
+      tags:
+        - "despacharDocumentoInterno"
+      summary: "Despacha un documento interno."
+      description: El destinatario despacha este documento es decir **confirma que se ha terminado de crear** y lo envía hacia un destinatario. Una vez que se despacha, se genera un **CITE** para este documento y se realiza el proceso de aprobación con ciudadanía digital retornando un `linkRedireccion`.
+      operationId: despacharDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - correlativo
+              properties:
+                correlativo:
+                  type: string
+                  description: Correlativo identificador del documento
+                  example: MJTI-RRHH-12-2021
+      responses:
+        200:
+          description: Documento despachado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citeDocumento:
+                    type: string
+                    example: MJTI-RRHH-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-RRHH-3-2021
+                  linkRedireccion:
+                    type: string
+                    example: https://demo.gtic.gob.bo/ciudadania-firma/29941-92914919291912
+                    description: Este campo es `null` cuando no se ha hecho el proceso de aprobación con ciudadanía digital.
+        "400":
+          description: Error al despachar documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró documento con el CITE especificado."
+  /gestion/aceptarDocumentoInterno:
+    post:
+      tags:
+        - "aceptarDocumentoInterno"
+      summary: "Acepta la revisión documento interno."
+      description: El destinatario acepta revisar este documento.
+      operationId: aceptarDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-89247643-3-2021
+      responses:
+        200:
+          description: Documento aceptado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citeDocumento:
+                    type: string
+                    example: MJTI-89247643-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-89247643-3-2021
+        "400":
+          description: Error al aceptar documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró documento con el CITE especificado."
+  /gestion/observacionDocumentoInterno:
+    post:
+      tags:
+        - "observacionDocumentoInterno"
+      summary: ""
+      description: El destinatario agrega observaciones al documento solicitando se subsanen.
+      operationId: observarDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              - observacion
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-89247643-3-2021
+                observacion:
+                  type: string
+                  example: Agregar al área ADMINISTRATIVA como destintario de este documento.
+      responses:
+        200:
+          description: Observación registrada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citeDocumento:
+                    type: string
+                    example: MJTI-89247643-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-89247643-3-2021
+        "400":
+          description: Error al aceptar documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró documento con el CITE especificado."
+    put:
+      tags:
+        - "observacionDocumentoInterno"
+      summary: "Subsanación de observación de documento interno"
+      description: El remitente ha revisado las observaciones y aplica acciones para subsanar el documento interno.
+      operationId: subsanarObservacionDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-89247643-3-2021
+                plantillaValor:
+                  description: Valores del llenado del formulario especificado en el campo `plantilla`.
+                  type: object
+                  example:   [{
+                    "validations": [],
+                    "label": "Datos para analizar su caso<br>",
+                    "ariaLabel": null,
+                    "ariaLabelledBy": null,
+                    "customClass": null,
+                    "customStyles": null,
+                    "disabled": false,
+                    "placeholder": null,
+                    "autocomplete": null,
+                    "readonly": false,
+                    "visible": true,
+                    "type": "title",
+                    "typeInput": "title",
+                    "uid": "44946e08-4db6-4f5b-8c9d-631555725243",
+                    "name": "title1",
+                    "required": false,
+                    "active": false,
+                    "designColumn": "col-12"
+                  }, {}]
+                comentario:
+                  type: string
+                  example: Se ha agregado al área de ASUNTOS JURÍDICOS como destinatario de este documento.
+      responses:
+        200:
+          description: Subsanación registrada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citeDocumento:
+                    type: string
+                    example: MJTI-89247643-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-89247643-3-2021
+        "400":
+          description: Error al registrar subsanación de observación de documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se ha encontrado el documento con el CITE especificado."
+  /gestion/vistoBuenoCreacion:
+    post:
+      tags:
+        - "vistoBuenoCreacion"
+      summary: "Dar el visto bueno a la creación de un documento cuando el usuario es vía."
+      description: Un usuario marcado como vía de creación de un documento da el visto bueno para que continúe el flujo.
+      operationId: vistoBuenoViaCreacion
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-DGCA-3-2021
+                comentario:
+                  type: string
+                  description: Comentario sobre el visto bueno dado.
+                  example: (opcional) Se da el visto bueno dle presente informe para que el flujo prosiga.
+      responses:
+        200:
+          description: Visto bueno registrado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cite:
+                    type: string
+                    example: MJTI-DGCA-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-DGCA-2-2021
+        "400":
+          description: Error al dar el visto bueno de creación de documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró el documento con CITE 'MJTI-DGCA-3-2021'"
+  /gestion/vistoBuenoDerivacion:
+    post:
+      tags:
+        - "vistoBuenoDerivacion"
+      summary: "Dar el visto bueno a la derivación de un documento cuando el usuario es vía."
+      description: Un usuario marcado como vía de derivación de un documento da el visto bueno para que continúe el flujo.
+      operationId: vistoBuenoViaDerivacion
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-DGCA-3-2021
+                comentario:
+                  type: string
+                  description: Comentario sobre el visto bueno dado.
+                  example: (opcional) Se da el visto bueno dle presente informe para que el flujo prosiga.
+      responses:
+        200:
+          description: Visto bueno registrado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cite:
+                    type: string
+                    example: MJTI-DGCA-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-DGCA-2-2021
+        "400":
+          description: Error al dar el visto bueno de derivación de documento.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró el documento con CITE 'MJTI-DGCA-3-2021'"
+
+  /gestion/derivarDocumentoInterno:
+    post:
+      tags:
+        - "derivarDocumentoInterno"
+      summary: "Derivación de documento interno."
+      description: Se hace la derivación de un documento interno.
+      operationId: derivarDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              - descripcion
+              - destinatario
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-89247643-3-2021
+                destinatario:
+                  type: string
+                  description: Documento de identidad del destinatario para quien se deriva este documento.
+                  example: 5212317
+                descripcion:
+                  type: string
+                  description: Detalle textual de la Derivación
+                  example: Se deriva este documento a Juan Manuel Marcillas por ser el responsable actual del área de asuntos legales y tiene conocimiento sobre los procesos solicitados.
+                via:
+                  type: object
+                  properties:
+                    tipo:
+                      type: string
+                      enum:
+                        - CON COPIA
+                        - VISTO BUENO REQUERIDO
+                      description: |
+                        `CON COPIA`: Significa que el usuario puede ver y hacer observaciones pero no es necesario que dé el visto bueno.
+                        `VISTO BUENO REQUERIDO`: Significa que el usuario via debe dar el visto bueno al documento para que el destinatario pueda ver el documento en su bandeja.
+                    numeroDocumentos:
+                      items:
+                        type: array
+                        items:
+                          type: string
+                          example: 12345673
+                      description: Números de documentos de identidad para poner a estos usuarios como **vía**.
+                documentosAdjuntos:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      nombre:
+                        type: string
+                        example: Report-22-marzo
+                      contenido:
+                        type: string
+                        example: CadenaBase64........
+                        description: Se espera Cadena base 64
+                      tipo:
+                        type: string
+                        enum:
+                          - pdf
+                          - jpg
+                          - jpeg
+                          - png
+                          - odt
+                          - doc
+                          - docx
+                        description: Tipo de archivo.
+      responses:
+        200:
+          description: Documento derivado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citeDocumento:
+                    type: string
+                    example: MJTI-89247643-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-89247643-3-2021
+                  etapaFlujo:
+                    type: number
+                    example: 2
+        "400":
+          description: Error al derivar documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró el 'destintarioEspecifico'"
+
+  /gestion/archivarDocumentoInterno:
+    post:
+      tags:
+        - "archivarDocumentoInterno"
+      summary: "Archiva un documento interno."
+      description: El destinatario archiva un documento interno. Se espera que se apruebe el documento con ciudadanía digital primero.
+      operationId: archivarDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-89247643-3-2021
+                descripcion:
+                  type: string
+                  description: Razón para archivar este documento.
+                  example: (opcional) Este documento se ha concluído pero por actualizaciones posteriores ya no tiene efecto.
+                categoria:
+                  type: string
+                  description: (opcional) La categoría a la que se quiere archivar este flujo documental incluídos todos los documentos.
+                  example: informes
+      responses:
+        200:
+          description: Documento archivado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citeDocumento:
+                    type: string
+                    example: MJTI-89247643-3-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-89247643-3-2021
+                  linkRedireccion:
+                    type: string
+                    example: https://link.....
+                    description: Este campo es `null` cuando no se ha hecho el proceso de aprobación con ciudadanía digital.
+        "400":
+          description: Error al archivar documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró documento con el CITE especificado."
+  /gestion/cerrarDocumentoInterno:
+    post:
+      tags:
+        - "cerrarDocumentoInterno"
+      summary: "Cierra un documento interno y con este el flujo documental."
+      description: El destinatario cierra un documento interno. Esta acción da conclusión también al flujo documental asociado. El destinatario debe aprobar el cierre del documento.
+      operationId: cerrarDocumentoInterno
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+              - cite
+              properties:
+                cite:
+                  type: string
+                  description: CITE del documento.
+                  example: MJTI-89247643-3-2021
+                descripcion:
+                  type: string
+                  description: Razón para cerrar este documento.
+                  example: (opcional) Se han completado las solicitudes para este documento.
+      responses:
+        200:
+          description: Documento cerrado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citeDocumento:
+                    type: string
+                    example: MJTI-LEGAL-11-2021
+                  codigoFlujo:
+                    type: string
+                    example: F-MJTI-89247643-3-2021
+                  linkRedireccion:
+                    type: string
+                    example: https://link.....
+                    description: Este campo es `null` cuando no se ha hecho el proceso de aprobación con ciudadanía digital.
+        "400":
+          description: Error al cerrar documento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se encontró documento con el CITE especificado."
+  /gestion/archivoAdjunto:
+    get:
+      tags:
+        - "archivoAdjunto"
+      summary: "Obtiene el contenido de un archivo adjunto en base 64"
+      description: Mediante el nombre se busca el archivo adjunto y devuelve el MIME type + el contenido en base 64. Si el documento para el que fue subido es **CLASIFICADO** el contenido solo se devuelve si el usuario es parte del flujo documental, si es **ABIERTO** se devuelve a cualquier usuario.
+      parameters:
+      - name: nombre
+        in: query
+        description: Nombre del archivo subido
+        required: true
+        schema:
+          type: string
+          example: doc_RSS-pdf_01122021-075028.pdf
+      operationId: archivoAdjuntoEnB64
+      responses:
+        200:
+          description: Archivo encontrado y disponible.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  datos:
+                    type: string
+                    example: data:application/pdf;base64,JVBERi0xLj...
+        "404":
+          description: Error al obtener archivo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "Archivo no encontrado doc_RSS-pdf_01122021-075028.pd"
+  /gestion/historialFlujo:
+    get:
+      tags:
+        - "historialFlujo"
+      summary: "Realiza el listado de documentos internos dados los criterios de búsqueda dados en los parámetros."
+      description: Obtiene el historial completo de un flujo documental. Devuelve un array de todos los documentos y cada documento tiene su historial de acciones.
+      parameters:
+      - name: codigoFlujo
+        in: query
+        description: Cite o parte del cite siendo buscado
+        required: false
+        schema:
+          type: string
+          example: F-MJTI-LEGAL-1-2939191
+      responses:
+        200:
+          description: Historial obtenido exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {
+                    "mensaje": "OK",
+                    "finalizado": true,
+                    "datos": {
+                      "id": "02832358-2eb9-48ab-807c-ce267c2945b4",
+                      "codigoFlujo": "F-DGGA-1-2021-1638657350",
+                      "tipoFlujo": "INTERNO",
+                      "etapaFlujo": 3,
+                      "idFlujoPadre": null,
+                      "nroCopia": 0,
+                      "estado": "ARCHIVADO",
+                      "categoria": "documentos",
+                    "documentos": [
+                      {
+                        "cite": "MJTI-DGGA-1-2021",
+                        "asunto": "Solicitud de viajes, COn COPIA",
+                        "firmado": false,
+                        "fechaEmitido": "2021-12-04T22:35:50.063Z",
+                        "fechaAceptado": "2021-12-04T22:36:10.875Z",
+                        "fechaCerrado": "2021-12-04T22:37:52.465Z",
+                        "estado": "CERRADO",
+                        "etapaDocumento": 1,
+                        "remitente": {
+                          "nombres": "Menecia",
+                          "primerApellido": "Murales",
+                          "segundoApellido": "Taila",
+                          "numeroDocumento": "12345672"
+                        },
+                        "destinatarioEspecifico": {
+                          "nombres": "Turni",
+                          "primerApellido": "Muhia",
+                          "segundoApellido": "Dorian",
+                          "numeroDocumento": "12345673"
+                        },
+                        "historial": [
+                          {
+                            "evento": "observación",
+                            "tipo": "observación",
+                            "autor": {
+                              "nombres": "Menecia",
+                              "primerApellido": "Murales",
+                              "segundoApellido": "Taila",
+                              "numeroDocumento": "12345672"
+                            },
+                            "numeroDocumento": "12345672",
+                            "fecha": "2021-12-04T22:36:10.875Z",
+                            "observacion": "Aplicar correcciones al campo.... al nuevo documento.",
+                            "createdAt": "2021-12-04T22:36:10.875Z"
+                          },
+                          {
+                            "evento": "subsanación",
+                            "tipo": "subsanación",
+                            "numeroDocumento": "12345671",
+                            "autor": {
+                              "nombres": "Martin",
+                              "primerApellido": "Marin",
+                              "segundoApellido": "Muelas",
+                              "numeroDocumento": "12345671"
+                            },
+                            "fecha": "2021-12-04T22:36:28.067Z",
+                            "observacion": "Se han corregido las observaciones hechas.",
+                            "createdAt": "2021-12-04T22:36:28.067Z"
+                          },
+                          {
+                            "evento": "derivación",
+                            "de": {
+                              "nombres": "Menecia",
+                              "primerApellido": "Murales",
+                              "segundoApellido": "Taila",
+                              "numeroDocumento": "12345672"
+                            },
+                            "para": {
+                              "nombres": "Turni",
+                              "primerApellido": "Muhia",
+                              "segundoApellido": "Dorian",
+                              "numeroDocumento": "12345673"
+                            },
+                            "createdAt": "2021-12-04T22:37:11.671Z",
+                            "updatedAt": "2021-12-04T22:37:11.671Z"
+                          },
+                          {
+                            "evento": "derivación vía",
+                            "nombres": "Estela",
+                            "primerApellido": "Ramirez",
+                            "segundoApellido": "Del Cerro",
+                            "numeroDocumento": "12345674",
+                            "tipo": "CON COPIA",
+                            "vistoBueno": false,
+                            "createdAt": "2021-12-04T22:37:11.692Z",
+                            "updatedAt": "2021-12-04T22:37:11.693Z"
+                          },
+                          {
+                            "evento": "derivación vía",
+                            "nombres": "Tulio",
+                            "primerApellido": "Muhias",
+                            "segundoApellido": "Llanos",
+                            "numeroDocumento": "12345676",
+                            "tipo": "CON COPIA",
+                            "vistoBueno": false,
+                            "createdAt": "2021-12-04T22:37:11.703Z",
+                            "updatedAt": "2021-12-04T22:37:11.703Z"
+                          }
+                        ]
+                      },
+                      {
+                        "cite": "MJTI-UA-1-2021",
+                        "asunto": "Documento con padre",
+                        "firmado": false,
+                        "fechaEmitido": "2021-12-04T22:37:52.517Z",
+                        "fechaAceptado": "2021-12-04T22:38:21.345Z",
+                        "fechaCerrado": "2021-12-04T22:38:33.307Z",
+                        "estado": "ARCHIVADO",
+                        "etapaDocumento": 3,
+                        "remitente": {
+                          "nombres": "Turni",
+                          "primerApellido": "Muhia",
+                          "segundoApellido": "Dorian",
+                          "numeroDocumento": "12345673"
+                        },
+                        "destinatarioEspecifico": {
+                          "nombres": "Agustina",
+                          "primerApellido": "Flornio",
+                          "segundoApellido": "Zauyonr",
+                          "numeroDocumento": "12345675"
+                        },
+                        "historial": [
+                          {
+                            "evento": "archivado",
+                            "tipo": "archivado",
+                            "numeroDocumento": "12345675",
+                            "fecha": "2021-12-04T22:38:33.307Z",
+                            "observacion": "Se han completado las solicitudes para este documento.",
+                            "createdAt": "2021-12-04T22:38:33.307Z"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }                  
+        "404":
+          description: Error al obtener el historial del flujo documental
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error parámetros
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se ha encontrado el flujo documental con codigo F-MJTI-1-2312321" 
+  /gestion/categoriasFlujo:
+    get:
+      tags:
+        - "categoriasFlujo"
+      summary: "Categorías de flujos documentales archivados"
+      description: Obtiene la lista de categorías de flujos documentales archivados.
+      operationId: CategoriasFlujo
+      responses:
+        200:
+          description: Categorías de flujos listadas correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: documentos
+        "400":
+          description: Error al obtener categorías de flujos 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Error documento
+                  errores:
+                    type: array
+                    items:
+                      type: string
+                      example: "No se pudo listar las categorías"
+
+  /system/iopToken:
+    get:
+      tags:
+        - "iopToken"
+      summary: Categorías de flujos documentales archivados. Solo para el usuario **ADMIN**.
+      description: Obtiene la lista de sistemas/entidades y los tokens registrados para acceder a la determinados endpoints de recuperación de datos.
+      operationId: iopTokenCrear
+      responses:
+        200:
+          description: Tokens Iop listados correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: 272626fa-13cb-436c-bd50-9210ce978bb0
+                    idUsuario:
+                      type: string
+                      example: f2820d24-61aa-42a7-8da0-b21e2f9dfef8
+                    nombreEntidad:
+                      type: string
+                      example: DORI
+                    token:
+                      type: string
+                      example: 28c39810....
+                    endpoints:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                          - usuarios
+                          - historialFlujo
+                      description: |
+                        Endpoints a los que se tiene acceso. Solo están disponibles los endpoints:
+                        - usuarios
+                        - documentoInterno
+                        - documentoInternoSearch
+                        - archivoAdjunto
+                        - historialFlujo
+                        - categoriasFlujo
+                    activo:
+                      type: boolean
+                      example: true
+    post:
+      tags:
+        - "iopToken"
+      summary: Categorías de flujos documentales archivados. Solo para el usuario **ADMIN**.
+      description: Registra el nombre de una entidad para poder acceder a ciertos endpoints
+      operationId: iopTokenListar
+      requestBody:
+        description: Entrada de datos.
+        content:
+          application/json:
+            schema:
+              required:
+                - nombreEntidad
+                - endpoints
+              properties:
+                usuario:
+                  type: string
+                  example: 1000001
+                  description: Número de documento de identidad del usuario que se asocia con esta entidad.
+                nombreEntidad:
+                  type: string
+                  example: DORIA
+                endpoints:
+                  type: array
+                  example:
+                    - usuarios
+                    - documentoInterno
+                    - documentoInternoSearch
+                    - archivoAdjunto
+                    - historialFlujo
+                    - categoriasFlujo
+                  description: |
+                    Se registran los endpoints a los que se tendrá acceso. Solo se permiten los endpoints:
+                    - usuarios
+                    - documentoInterno
+                    - documentoInternoSearch
+                    - archivoAdjunto
+                    - historialFlujo
+                activo:
+                  type: boolean
+                  example: true
+      responses:
+        200:
+          description: Tokens Iop listados correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "mensaje": "OK",
+                  "finalizado": true,
+                  "datos": {
+                    "createdAt": "09-12-2021 20:11:19",
+                    "updatedAt": "09-12-2021 20:11:19",
+                    "deletedAt": null,
+                    "id": "2d6dfa66-149c-4cfa-86a0-c1440387fce4",
+                    "activo": true,
+                    "userUpdated": "21ea8c3c-f200-4798-8761-46dd5947ddc7",
+                    "userDeleted": "2218e547-e65c-4814-8fb9-48b062ad3a43",
+                    "nombreEntidad": "DORA1",
+                    "endpoints": [
+                      "usuarios",
+                      "documentoInterno",
+                      "documentoInternoSearch",
+                      "archivoAdjunto",
+                      "historialFlujo",
+                      "categoriasFlujo"
+                    ],
+                    "userCreated": "7171272e-b31b-4c34-9220-9f535c958c5c",
+                    "token": "b343c680-594d-11ec-b6e9-b10a3b3c9e5e_47_39958b4c-4d4e-424a-9758-82136b454185",
+                    "idUsuario": "aa820d24-61aa-42a7-8da0-b21e2f4dfef8"
+                  }
+                }
+        
+security:
+  - bearerAuth: []         # use the same name as above
+
+###############################################################
+############ COMPONENTS
+###############################################################
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+  schemas:
+    documentoResumido:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 44654565-c8ac-4f28-a29b-4ed13b2ccee1
+        codigoFlujo:
+          type: string
+          example: F-MJTI-LEGAL-128-2021
+        cite:
+          type: string
+          example: MJTI-LEGAL-129-2021
+        correlativo:
+          type: string
+          example: LEGAL-252-2021
+        clasificacion:
+          type: string
+          example: ABIERTO
+        firmado:
+          type: boolean
+          example: false
+        fechaEmitido:
+          type: string
+          example: 14-11-2021 14:10:42
+        fechaAceptado:
+          type: string
+          example: 14-11-2021 16:10:42
+        fechaCerrado:
+          type: string
+          example: null
+          description: Formato DD-MM-AAAA HH:mm:ss por ejemplo 14-11-2021 16:10:42
+        nombrePlantilla:
+          type: string
+          example: Solicitud de viajes 1
+        remitidoPor:
+          type: string
+          example: 6647643
+        asunto:
+          type: string
+          example: Solicitud de viajes - Carlos Perez
+        destinatarioEspecifico:
+          type: object
+          properties:
+            numeroDocumento:
+              type: string
+              example: 9048672
+            nombres:
+              type: string
+              example: Juana Esther
+            primerApellido:
+              type: string
+              example: Tellez
+            segundoApellido:
+              type: string
+              example: Corrales
+            area:
+              type: string
+              example: ASUNTOS JURÍDICOS
+        destinatarioArea:
+          type: string
+          example: ""
+        citeDocumentoPadre:
+          type: string
+          example: MJTI-LEGAL-128-2021
+        estado:
+          type: string
+          example: NUEVO
+    usuarioReducido:
+      type: object
+      properties:
+        numeroDocumento:
+          type: string
+          description: Esta campo es equivalente al C.I. 
+          example: 8851812
+        entidad:
+          type: object
+          properties:
+            nombre:
+              type: string
+              example: Ministerio de justicia y transparencia institucional
+            sigla:
+              type: string
+              example: MJTI
+        tipoDocumento:
+          type: string
+          example: CI
+        nombres:
+          type: string
+          example: Juan Marcelo
+        primerApellido:
+          type: string
+          example: Laguna
+        segundoApellido:
+          type: string
+          example: Vernabe
+        cargo:
+          type: string
+          example: asistente de jefe de unidad
+        area:
+          type: object
+          properties:
+            nombre:
+              type: string
+              example: LEGAL
+            sigla:
+              type: string
+              example: LGL
+        estado:
+          type: string
+          enum: [ACTIVO, INACTIVO]
+          example: ACTIVO

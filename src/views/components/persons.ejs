@@ -1,0 +1,7 @@
+<% if ( Array.isArray(componente?.value) && componente?.value.length > 0){ %>
+    <% componente?.value?.forEach((persona,index) => {%>
+        <div class="text-justify"> <%- persona?.label %></div>
+    <% });%>
+<% } else {%>
+    <div class="text-justify"><%- componente?.value?.label %></div>
+<% } %>

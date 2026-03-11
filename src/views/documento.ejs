@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>PDF</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<% const DocxFormat = (typeof docxFormat !== 'undefined' && docxFormat) || false; %>
+<% const renderizarTitulo = DocxFormat ? (typeof renderTitle !== 'undefined' && renderTitle) || false : true; %>
+<% const usableWidth = (typeof usableWidthPts !== 'undefined') ? usableWidthPts + 'pt' : '21.59cm'; %>
+
+<% if (DocxFormat) { %>
+    <style>
+        body {
+            font-family: Arial !important;
+            font-size: 13pt;
+            line-height: 1.5;
+            margin-left: 0cm;
+            margin-right: 0cm;
+            width: <%= usableWidth %>;
+            min-width: <%= usableWidth %>;
+            max-width: <%= usableWidth %>;
+        }
+    </style>
+<% } else { %>
+    <style>
+        body {
+            font-family: Poppins,-apple-system,Helvetica Neue,Helvetica,Arial,sans-serif;
+            font-size: 13pt;
+            line-height: 1.5;
+            margin-left: <%= marginLeft || '4cm' %>;
+            margin-right: <%= marginRight || '3cm' %>;
+        }
+    </style>
+<% } %>
+
+    <style>
+        .text-justify {
+          text-align: justify !important;
+        }
+
+        hr.salto{
+            page-break-before: always;
+        }
+        .form-check {
+            border: 1px solid #e4e6ef;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 4px 4px 0 0;
+            height: 100%!important;
+        }
+        .form-check-inline {
+            display: inline-block;
+            align-items: center!important;
+            height: 40px;
+            padding-top: 9px;
+            padding-bottom: 9px;
+            height: 100%!important;
+        }
+        .center {
+            display: inline-block;
+            vertical-align: middle;
+            height: 40px;
+        }
+        .q-radio__bg {
+            fill: #023859;
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+        }
+        .q-radio__bg_not_selected {
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+            fill: rgba(0, 0, 0, 0.54);
+        }
+        .q-checkbox__bg {
+            fill: #023859;
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+        }
+        .q-checkbox__bg_not_selected {
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+            fill: rgba(0, 0, 0, 0.54);
+        }
+        .subtitle, .title {
+            font-weight: bold;
+            margin: 0 0 10px;
+        }
+        .title {
+            font-size: 29px;
+            line-height: 35px;
+            font-weight: bold;
+        }
+        .subtitle {
+            font-size: 23px;
+            font-weight: bold;
+            line-height: 29px;
+        }
+        .text-bold {
+            font-weight: 700;
+        }
+        .text-h4 {
+            font-size: 20pt;
+            font-weight: 700;
+            letter-spacing: .009em;
+        }
+        .q-separator--horizontal {
+            display: block;
+            height: 2px;
+        }
+        .q-separator {
+            background: black;
+            border: 0;
+            flex-shrink: 0;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            transition: background .3s,opacity .3s;
+        }
+        .text-label{
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .cargo{
+            margin-bottom: 0px;
+        }
+        .derivacion{
+            margin-bottom: 10px;
+        }
+        ul { padding: 0; margin: 0; }
+        .q-li {
+            box-sizing: border-box;
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        table { page-break-inside:auto; width: 100%; height: 100%; }
+        tbody tr { page-break-inside:avoid !important; page-break-after:auto !important }
+        thead { display:table-header-group }
+        tfoot { display:table-footer-group }
+        .text-oculto{
+            display: none;
+        }
+        .enlace{
+            padding-bottom: 1.5rem;
+        }
+        .enlace .caption{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-clamp: 1;
+            -webkit-line-clamp: 1;
+        }
+    </style>
+</head>
+
+
+<body>
+    <section id="render-container">
+        <% var count = 0 %>
+        
+        <% var derivacion = documento?.plantilla?.configuracion_json?.filter(x => x?.type === 'derivacion')[0] %>
+        <% if (!derivacion?.ocultarEnPdf && renderizarTitulo) { %>
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                <p class="text-h4 text-bold"><%= documento.plantilla.nombre.toUpperCase() %></p>
+                </div>
+            </div>
+        <% } %>
+    
+        <div class="row">
+        <% documento.plantilla.configuracion_json.forEach((componente,index) => {%>
+            <!-- <pre>
+                <%- componente?.type %>
+            </pre> -->
+    
+            <% if (componente?.type == 'editor'){ %>
+                <%- include('components/row.ejs', {
+                    begin: false,
+                    close: false,
+                    end: count !== 0
+                }) %>
+                <%- include('components/editor.ejs', { componente: componente, shortCodes: shortCodes }) %>
+                <% count = 0 %>
+            <% } %>
+    
+            <% 
+                var longitud = componente.designColumn.split('-')
+                var newComponent = parseInt(longitud[longitud.length - 1])
+            %>
+    
+            <%- include('components/row.ejs', {
+                begin: count === 0,
+                close: count + newComponent > 12,
+                end: false
+            }) %>
+    
+            <% count = count + newComponent > 12 ? newComponent : count + newComponent %>
+                <div class="<%= componente?.designColumn?.replace('col-','col-xs-')%>">
+    
+                    <% if (componente?.type == 'title' && !componente?.hidden) { %>
+                        <div class="<%= componente?.typeInput %>" style="margin-bottom:10px;"><%- componente?.label %></div>
+                    <% }%>
+    
+                    <% if (componente?.type == 'libroHR'){ %>
+                        <%- include('components/libroHR.ejs', 
+                        {
+                            componente: componente
+                        }) %>
+                    <% }%>
+    
+                    <% if (componente?.type == 'modificacionPoaIop'){ %>
+                        <% if (!componente.configuracion.presupuesto) { %>
+                            <%- include('components/modificacionPoa.ejs', 
+                            {
+                                operaciones: componente.value.valores.operacion
+                            }) %>
+                        <% } %>
+                        <%- include('components/modificacionPoa/presupuesto.ejs', 
+                        {
+                            presupuestos: componente.value.valores.presupuesto
+                        }) %>
+                    <% }%>
+    
+                    <% if (componente?.type == 'derivacion' && !componente?.ocultarEnPdf){ %>
+                        <%- include('components/derivacion.ejs', 
+                        {
+                            componente: componente,
+                            referencias: referencias
+                        }) %>
+                    <% }%>
+    
+                    <% if (componente?.type == 'separator'){ %>
+                        <hr class="q-separator q-separator--horizontal q-my-md" aria-orientation="horizontal">
+                    <% } %>
+                    
+                    <% if (componente?.type == 'persons'){ %>
+                        <%- 
+                        include('components/selectPerson.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        })// include('components/persons.ejs', { componente: componente }) %>
+                    <% }%>
+    
+                    <% if (componente?.type == 'text' && componente?.typeInput !== 'hidden'){ %>
+                        <% const presupuesto = documento?.plantilla?.configuracion_json.find(e => ['presupuesto', 'presupuestoIop'].includes(e.type));
+                           if (presupuesto && ['efd6ca02-71b2-412c-a437-162316ac1fb4', '63449bf1-18a9-4eae-b8ae-aff164e27a95'].includes(presupuesto?.value?.valores?.tipoViaje?.id) && componente?.uid === 'cb4092c9-05de-4ce0-a08d-13d94f4f3afd') {
+                        %>
+                        <%- include('components/input.ejs', { 
+                            label: 'Importe de pasaje aéreo en dolares',
+                            value: componente?.typeInput === 'date' ?  new Date(`${componente?.value?.valores}T00:00:00`).toLocaleDateString('es-ES',{ weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }) : componente?.value?.valores
+                        }) %>
+                        <%
+                            } else {
+                        %>
+                        <%- include('components/input.ejs', { 
+                            label: componente?.label,
+                            value: componente?.typeInput === 'date' ?  new Date(`${componente?.value?.valores}T00:00:00`).toLocaleDateString('es-ES',{ weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }) : componente?.value?.valores
+                        }) %>
+                        <% } %>
+                    <% } %>
+    
+                    <% if (componente?.type == 'diaViaticos'){ %>
+                        <%- include('components/input.ejs', { label: componente?.label, value: componente?.value?.valores?.dias }) %>
+                    <% } %>
+                      <% if (componente?.type == 'upload' && componente?.value?.valores?.length > 0) { %>
+                        <% if (!componente?.ocultarEnPdf) { %>
+                            <%- include('components/upload.ejs', { componente: componente }) %>
+                        <% } %>
+                    <%}%>
+    
+                    <% if (componente?.type == 'funcionario' && componente?.value?.valores) { %>
+                        <%- include('components/funcionario.ejs', { componente: componente }) %>
+                    <% } %>
+    
+                    <% if (componente?.type == 'pagoDetalle' && componente?.value?.valores) { %>
+                        <%- include('components/pagoDetalle.ejs', { componente: componente }) %>
+                    <% } %>
+    
+                    <% if (componente?.type == 'pagoDivididos' && componente?.value?.valores) { %>
+                        <%- include('components/pagoDivididos.ejs', { componente: componente }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'presupuesto' && Array.isArray(componente?.value?.valores?.detalles) && componente?.value?.valores?.detalles?.length > 0) { %>
+                        <%- include('components/presupuesto.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'eventual' && Array.isArray(componente?.value?.valores?.detalles) && componente?.value?.valores?.detalles?.length > 0) { %>
+                        <%- include('components/eventual.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'matrizEventual' && Array.isArray(componente?.value?.valores?.registros) && componente?.value?.valores?.registros?.length > 0) { %>
+                        <%- include('components/matrizEventual.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+                    
+                    <% if (componente.type == 'notificacion' && Array.isArray(componente?.value?.valores?.registros) && componente?.value?.valores?.registros?.length > 0) { %>
+                        <%- include('components/notificaciones.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'presupuestoIop' && Array.isArray(componente?.value?.valores?.detalles) && componente?.value?.valores?.detalles?.length > 0) { %>
+                        <%- include('components/presupuestoIop.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'unificadorPresupuesto') { %>
+                        <%- include('components/unificador.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'planillaEventual' && Array.isArray(componente?.value?.valores?.detalles) && componente?.value?.valores?.detalles?.length > 0) { %>
+                        <%- include('components/planillaEventual.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'donacion' && Array.isArray(componente?.value?.valores?.detalles) && componente?.value?.valores?.detalles?.length > 0) { %>
+                        <%- include('components/donacion.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'pago') { %>
+                        <%- include('components/pago.ejs', {
+                            data: componente?.configuracion.data,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'poa' && ((Array.isArray(componente?.value?.valores) && componente?.value?.valores?.length > 0) || (typeof componente?.value?.valores === 'object' && 'codigo' in componente?.value?.valores))){ %>
+                        <%- include('components/poa.ejs', {
+                            config: componente?.configuracion,
+                            value: componente?.value?.valores
+                        }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'select' && componente.visible){ %>
+                        <%- include('components/input.ejs', { label: componente?.label, value: componente?.value?.valores[componente?.optionLabel] }) %>
+                    <% } %>
+    
+                    <% if (componente.type == 'radio' && componente?.options.length > 0){ %>
+                        <%- include('components/radio.ejs', { componente: componente }) %>
+                    <% } %>   
+    
+                    <% if (componente.type == 'checkbox'){ %>
+                        <%- include('components/checkbox.ejs', { componente: componente }) %>
+                    <% } %>
+    
+    
+                    <% if (componente.type == 'datagrid' && componente?.options.length > 0){ %>
+                        <% if (componente?.label) { %>
+                            <div class="subtitle" style="margin-bottom:10px;"><%- componente?.label %></div>
+                        <% } %>
+                        <%- include('components/datagrid.ejs', { componente: componente }) %>
+                    <% } %>   
+                </div>
+            
+        <% });%>
+    
+        <%- include('components/row.ejs', {
+            begin: false,
+            close: false,
+            end: count !== 0
+        }) %>
+    
+        <% if (adjuntos.count > 0) {%>
+                <div class='col-xs-12'>
+                            <div class="text-bold">Adjuntos</div>
+                            <% adjuntos.rows.forEach(item => { %>
+                                <p class="text-label"><%-item.nombre%> - <%-item.ruta%></p>
+                            <% }); %>
+                </div>
+        <%}%>
+            
+        <% if (documento.documentoPadre) { %>
+          <div class="col-xs-12">
+            <b>___________________________________________________</b>
+            <div>
+              <p>
+                Documento antecesor:
+                <%- documento.documentoAntecesor.cite %>                
+              </p>
+            </div>
+          </div>
+        <% } %>
+        </div>
+    </section>
+</body>
+
+</html>

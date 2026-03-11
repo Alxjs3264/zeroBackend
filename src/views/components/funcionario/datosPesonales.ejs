@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-xs-6">
+        <div class="text-label">Nombre completo</div>
+        <p class="">
+            <%- value?.nombres %> <%- value?.primerApellido %> <%- value?.segundoApellido %>
+        </p>
+    </div>
+    <% if (options.length > 0) { %>
+        <% if (options.some(option => option.name === 'tipo_documento')) { %>
+            <div class="col-xs-2">
+                <div class="text-label"><%- options.find(option => option.name === 'tipo_documento').label %></div>
+                <p class=""><%- value?.tipoDocumento %></p>
+            </div>
+        <% } %>
+        <% if (options.some(option => ['nro_documento', 'complemento'].includes(option.name))) { %>
+            <div class="col-xs-4">
+                <div class="text-label"><%- options.find(option => option.name === 'nro_documento').label %></div>
+                <p class="">
+                    <%= `${
+                        options.some(option => option.name === 'nro_documento') 
+                        ? value?.numeroDocumento : 
+                        ''
+                    }${
+                        options.filter(option => ['nro_documento', 'complemento'].includes(option.name)).length === 2 
+                        && value?.complemento && value?.numeroDocumento 
+                        ? ' - ' 
+                        : ''
+                    }${
+                        options.some(option => option.name === 'complemento') 
+                        ? (value?.complemento ?? '') 
+                        : ''
+                    }`%>
+                </p>
+            </div>
+        <% } %>
+        <% if (options.some(option => option.name === 'fecha_nacimiento')) { %>
+            <div class="col-xs-6">
+                <div class="text-label"><%- options.find(option => option.name === 'fecha_nacimiento').label %></div>
+                <p class=""><%- value?.fechaNacimiento %></p>
+            </div>
+        <% } %>
+    <% } %>
+</div>
+<!-- <div class="row">
+    <div class="col-xs-12">
+        <div class="text-label">Nombre completo</div>
+        <p class="">
+            <%- value?.nombres %> <%- value?.primerApellido %> <%- value?.segundoApellido %>
+        </p>
+    </div>
+</div> -->

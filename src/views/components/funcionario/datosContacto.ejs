@@ -1,0 +1,20 @@
+<div class="row">
+    <% if (options.some(option => option.name === 'celular')) { %>
+        <div class="col-xs-3">
+            <div class="text-label"><%- options.find(option => option.name === 'celular').label %></div>
+            <p class=""><%- value?.celular %></p>
+        </div>
+    <% } %>
+    <% if (options.some(option => option.name === 'telefono')) { %>
+        <div class="col-xs-3">
+            <div class="text-label"><%- options.find(option => option.name === 'telefono').label %></div>
+            <p class=""><%- value?.telefono %></p>
+        </div>
+    <% } %>
+    <% if (options.some(option => option.name === 'correo_electronico')) { %>
+        <div class="col-xs-6">
+            <div class="text-label"><%- options.find(option => option.name === 'correo_electronico').label %></div>
+            <p class=""><%- value?.correoElectronico %></p>
+        </div>
+    <% } %>
+</div>

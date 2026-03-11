@@ -1,0 +1,13 @@
+<% if (config?.visible) { %>
+    <div class="col-xs-2 text-bold">De</div>
+    <div class="col-xs-1 text-center text-bold">:</div>
+    <div class="col-xs-9" style="padding-left: 28px;">
+        <div class="text-bold <%= procedencia === '-' && cargo === '-' ? 'derivacion' : '' %>"><%= nombreCompleto %></div>
+        <% if (cargo !== '-') { %>
+            <div class="<%= procedencia === '-' ? 'derivacion' : 'cargo' %>"><%= cargo %></div>
+        <% } %>
+        <% if (procedencia !== '-') { %>
+            <div class="derivacion"><%= procedencia %></div>
+        <% } %>
+    </div>
+<% } %>

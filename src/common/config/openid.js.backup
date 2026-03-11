@@ -1,0 +1,64 @@
+'use strict';
+
+const openid = {
+  issuer : 'https://cuenta.ciudadaniadigital.agetic.gob.bo',
+  client : {
+    application_type: "web",
+    grant_types: [
+        "authorization_code",
+        "refresh_token"
+    ],
+    id_token_signed_response_alg: "RS256",
+    post_logout_redirect_uris: [
+        "https://zero.justicia.gob.bo/statics/oauth/logout.html"
+    ],
+    require_auth_time: true,
+    response_types: [
+        "code"
+    ],
+    subject_type: "public",
+    token_endpoint_auth_method: "client_secret_basic",
+    introspection_endpoint_auth_method: "client_secret_basic",
+    introspection_signed_response_alg: "RS256",
+    revocation_endpoint_auth_method: "client_secret_basic",
+    backchannel_logout_session_required: false,
+    frontchannel_logout_session_required: false,
+    require_signed_request_object: false,
+    request_uris: [],
+    authorization_signed_response_alg: "RS256",
+    web_message_uris: [],
+    client_id_issued_at: 1649950927,
+    client_id: "BBo3rtJJWYFtCVfD-cwMF",
+    client_name: "MJTI - Sistema Integrado de Gestión Documental Digital ZERO",
+    client_secret_expires_at: 0,
+    client_secret: "0OyFeF1bO5L_IqeU1zgK8y9ItzTUQU5fM9dfSl4zxWtarMwhV28fgx5GB7OlJ2UMheM1fCURf1XUztW5gDv2cg",
+    contacts: [
+        "nelson.huanca@justicia.gob.bo"
+    ],
+    logo_uri: "https://zero.justicia.gob.bo/icons/icon-192x192.png",
+    redirect_uris: [
+        "https://zero.justicia.gob.bo/statics/oauth/login.html"
+    ],
+    registration_client_uri: "https://cuenta.ciudadaniadigital.agetic.gob.bo/reg/BBo3rtJJWYFtCVfD-cwMF",
+    registration_access_token: "GEns0f0lREtaKWgbYAP5ad7BYVsMYSi9G5Luc16i8oC"
+  },
+  client_params: {
+    // scope: ['openid nombre email fecha_nacimiento celular offline_access']
+    // scope: ['openid nombre email documento_identidad fecha_nacimiento celular'],
+
+    // TODO: Incluir en estos scopes el 'documento_identidad', se ha quitado temporalmente porque
+    // el cliente registrado no devuelve este claim y al intentar iniciar sesión se genera un error.
+    scope: ['openid profile fecha_nacimiento email adress celular offline_access']
+
+  },
+  aprobacion: {
+    //iopToken   : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJLaGc3YkR1dFFkR3hsOFBKZkhOYnN2U3BBa3R6blZCYyIsInVzZXIiOiJqcG9tYS10ZW1wIiwiZXhwIjoxNzE4NjUxMTYwfQ.N7cFGRz0lBDzlNxs9lKncIOOxK46K-4uWE1a7q5M0I0',
+    // url        : 'https://interoperabilidad.agetic.gob.bo/fake/aprobacion-documentos-test/v1/aprobaciones',
+    //iopToken : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiYzY1ZjRjMTEyNTU0ZjA1YTE1Y2M2YjdhZmNmYzM3MSIsInVzZXIiOiJuaHVhbmNhLWp1c3RpY2lhLWFwcm9iMSIsImV4cCI6MTc0NDk4ODY0MH0.CWs4k7hXBpQK9sJQVVr5VFl2c4oLwFzn-2Y6TaolzN0',
+    iopToken   : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3ODE2ZTc0OTg0M2E0N2Y4OGEwNTc4OWZkZjIyNTU3YSIsInVzZXIiOiJtaW5qdGktemVybyIsImV4cCI6MTc2ODc1OTI2MH0.u7_KmWqZcZPylIwyx276w5bmWDMAFNVmttUbZc9apCY',
+    url : 'https://ws.agetic.gob.bo/aprobacion-documentos/v1/aprobaciones',
+    postSecret : '11602ae4eef899b8a078871b95b97a8a2ca6c23cde078f209fd508be9866e6c371d382a59a8dd7ad61621aebd002849ca30bac1d027ded28847da08092b6c511'
+  }
+};
+
+module.exports = openid;

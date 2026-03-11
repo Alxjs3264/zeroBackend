@@ -1,0 +1,40 @@
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+      <tr>
+        <th scope="col">Fecha Salida</th>
+        <th scope="col">Hoja de Ruta</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Remitente</th>
+        <th scope="col">Área Remitente</th>
+        <th scope="col">Referencia</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% componente?.value?.valores?.rows.forEach((row, index) => { %>
+        <tr>
+          <td>
+            <p class="text-label"><%= row.createdAt %></p>
+          </td>
+          <td>
+            <p class="text-label"><%= row.codigoFlujo %></p>
+          </td>
+          <td>
+            <p class="text-label"><%= row.tipoFlujo %></p>
+          </td>
+          <td>
+            <p class="text-label"><%= row.remitente %></p>
+          </td>
+          <td>
+            <p class="text-label"><%= row.areaRemitente %></p>
+          </td>
+          <td>
+            <p class="text-label"><%= row.referencia %></p>
+          </td>
+          <td>
+            <p class="text-label"><%= row.estado %></p>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>

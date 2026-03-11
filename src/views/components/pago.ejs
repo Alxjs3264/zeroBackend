@@ -1,0 +1,196 @@
+<%
+function commify(n) {
+    if (n) {
+        n = parseFloat(parseFloat(n).toFixed(2))
+        const parts = n.toString().split(".");
+        const numberPart = parts[0];
+        const decimalPart = parts[1];
+        const thousands = /\B(?=(\d{3})+(?!\d))/g;
+        return numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "");
+    }
+    return '';
+}
+%>
+<% if (value?.nroPago) { %>
+    <div class="row">
+      <div class="col-xs-12 text-center subtitle">Nro. Pago: <%- value?.nroPago %></div>
+    </div>
+<% } %>
+<div class="row">
+    <% if (data[1].is) { %>
+        <div class="col-xs-6">
+            <div class="text-label"><%= data[1].label %></div>
+            <p class=""><%- value?.proveedor %></p>
+        </div>
+    <% } %>
+    <% if (data[2].is) { %>
+        <div class="col-xs-6">
+            <div class="text-label"><%= data[2].label %></div>
+            <p class=""><%- value?.nit %></p>
+        </div>
+    <% } %>
+</div>
+<% if (data[3].is) { %>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="text-label"><%= data[3].label %></div>
+            <p class=""><%- value?.direccion %></p>
+        </div>
+    </div>
+<% } %>
+<% if (data[4].is) { %>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="text-label"><%= data[4].label %></div>
+            <p class=""><%- value?.descripcion %></p>
+        </div>
+    </div>
+<% } %>
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <th scope="col">Operaciones POA</th>
+            <th scope="col">Presupuesto</th>
+            <th scope="col">Pago</th>
+            <th scope="col">Importe</th>
+            <th scope="col">Impuestos/Retención</th>
+            <th scope="col">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% let total = 0 %>
+        <% value?.detalles.forEach((item,index) => { %>
+            <tr>
+                <td>
+                    <p class="text-label">Código:</p>
+                    <p><%= Array.isArray(item.item) ? item?.item[0]?.operacion?.ri?.codigo : item?.item?.operacion?.ri?.codigo %></p>
+                    <p class="text-label">Descripción:</p>
+                    <p><%= Array.isArray(item.item) ? item?.item[0]?.operacion?.ri?.descripcion : item?.item?.operacion?.ri?.descripcion %></p>
+                </td>
+                <td>
+                    <% let partidaPresupuestaria = ''
+                       if (Array.isArray(item.item)) partidaPresupuestaria = `${item?.item[0]?.presupuesto?.partidaPresupuestaria?.codigo} ${item?.item[0]?.presupuesto?.partidaPresupuestaria?.descripcion}`
+                       else partidaPresupuestaria = `${item?.item?.presupuesto?.partidaPresupuestaria?.codigo} ${item?.item?.presupuesto?.partidaPresupuestaria?.descripcion}`
+                    %>
+                    <p class="text-label">Partida:</p>
+                    <p><%= partidaPresupuestaria %></p>
+                    <p class="text-label">Categoría:</p>
+                    <p><%= Array.isArray(item.item) ? item?.item[0]?.presupuesto?.categoriaProgramatica?.descripcion : item?.item?.presupuesto?.categoriaProgramatica?.descripcion %></p>
+                    <% let fuenteFinanciamiento = ''
+                       if (Array.isArray(item.item)) {
+                        fuenteFinanciamiento = `${item?.item[0]?.presupuesto?.fuenteFinanciamiento?.fuente}${item?.item[0]?.presupuesto?.fuenteFinanciamiento?.organismo ? ' ' + item?.item[0]?.presupuesto?.fuenteFinanciamiento?.organismo : ''}`
+                        fuenteFinanciamiento = `${fuenteFinanciamiento} ${item?.item[0]?.presupuesto?.fuenteFinanciamiento?.descripcion}`
+                       } else {
+                        fuenteFinanciamiento = `${item?.item?.presupuesto?.fuenteFinanciamiento?.fuente}${item?.item?.presupuesto?.fuenteFinanciamiento?.organismo ? ' ' + item?.item?.presupuesto?.fuenteFinanciamiento?.organismo : ''}`
+                        fuenteFinanciamiento = `${fuenteFinanciamiento} ${item?.item?.presupuesto?.fuenteFinanciamiento?.descripcion}`
+                       }
+                    %>
+                    <p class="text-label">Fuente:</p>
+                    <p><%= fuenteFinanciamiento %></p>
+                    <% if (item?.item?.presupuesto?.da) { %>
+                      <p class="text-label">Dirección Administrativa:</p>
+                      <% const da = `(${item?.item?.presupuesto?.da?.codigo}) ${item?.item?.presupuesto?.da?.nombre}` %>
+                      <p><%= da %></p>
+                    <%}%>
+                    <p class="text-label">Saldo:</p>
+                    <%const saldo = commify(item?.pago?.saldo || item?.item?.monto?.saldo)%>
+                    <p><%= saldo %> Bs.</p>
+                </td>
+                <td>
+                    <% if (data[11].is) { %>
+                        <p class="text-label"><%= data[11].label %>:</p>
+                        <p><%= item?.pago?.descripcion %></p>
+                    <% } %>
+                    <% if (data.length >= 21 && data[20].is) { %>
+                        <p class="text-label"><%= data[20].label %>:</p>
+                        <p><%= item?.pago?.unidadMedida.nombre %></p>
+                    <% } %>
+                    <% if (data.length >= 22 && data[21].is) { %>
+                        <p class="text-label"><%= data[21].label %>:</p>
+                        <p><%= item?.pago?.cantidad %></p>
+                    <% } %>
+                    <% if (data[12].is) { %>
+                        <p class="text-label"><%= data[12].label %>:</p>
+                        <p><%= item?.pago?.factura %></p>
+                    <% } %>
+                    <% if (data[13].is) { %>
+                        <p class="text-label"><%= data[13].label %>:</p>
+                        <p><%= item?.pago?.fechaFactura %></p>
+                    <% } %>
+                    <% if (data[14].is) { %>
+                        <p class="text-label"><%= data[14].label %>:</p>
+                        <p><%= item?.pago?.plazo %></p>
+                    <% } %>
+                </td>
+                <td>
+                    <% if (data[15].is) { %>
+                        <p class="text-label"><%= data[15].label %>:</p>
+                        <%const pago = commify(item?.pago?.pago)%>
+                        <p><%= pago %></p>
+                    <% } %>
+                    <% if (data[16].is) { %>
+                        <p class="text-label"><%= data[16].label %>:</p>
+                        <%const multa = commify(item?.pago?.multa)%>
+                        <p><%= multa %></p>
+                    <% } %>
+                    <% if (data[17].is) { %>
+                        <p class="text-label"><%= data[17].label %>:</p>
+                        <%const devengado = commify(item?.pago?.devengado)%>
+                        <p><%= devengado %></p>
+                    <% } %>
+                </td>
+                <td>
+                    <% if (data[5].is) { %>
+                        <p class="text-label"><%= data[5].label %>:</p>
+                        <p><%= item?.tipoRetencion?.nombre %></p>
+                    <% } %>
+                    <% if (data[5].is) { %>
+                        <p class="text-label">Retención:</p>
+                        <%const retencion = commify(item?.impuesto?.retencion)%>
+                        <p><%= retencion %></p>
+                    <% } %>
+                    <% if (data[9].is) { %>
+                        <p class="text-label"><%= data[9].label %>:</p>
+                        <p><%= item?.tipoImpuesto?.nombre %></p>
+                    <% } %>
+                    <% if (data[9].is) { %>
+                        <p class="text-label">RC-IVA::</p>
+                        <%const iva = commify(item?.impuesto?.iva)%>
+                        <p><%= iva %></p>
+                    <% } %>
+                    <% if (data[9].is) { %>
+                        <p class="text-label">IUE:</p>
+                        <%const iue = commify(item?.impuesto?.iue)%>
+                        <p><%= iue %></p>
+                    <% } %>
+                    <% if (data[9].is) { %>
+                        <p class="text-label">IT:</p>
+                        <%const it = commify(item?.impuesto?.it)%>
+                        <p><%= it %></p>
+                    <% } %>
+                </td>
+                <td>
+                    <p class="text-label">Monto Pagado:</p>
+                    <% total += parseFloat(item?.pago?.monto?.pagado) %>
+                    <%const pagado = commify(item?.pago?.monto?.pagado)%>
+                    <p><%= pagado %></p>
+                    <p class="text-label">Monto Retenido:</p>
+                    <%const retenido = commify(item?.pago?.monto?.retenido)%>
+                    <p><%= retenido %></p>
+                    <p class="text-label">Liquido Pagable:</p>
+                    <%const liquido = commify(item?.pago?.monto?.liquido)%>
+                    <p><%= liquido %></p>
+                </td>
+            </tr>
+        <% }) %>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <%const totales = commify(total)%>
+            <td>Total: <%= totales %></td>
+        </tr>
+    </tbody>
+</table>

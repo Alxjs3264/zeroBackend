@@ -1,0 +1,98 @@
+<% if(config.verOperaciones && value.registro) {%>
+    <div class="row">
+        <div class="col-xs-2">
+            <div class="text-label">Nivel Salarial</div>
+            <p class=""><%- value.registro.nivelSalarial %></p>
+        </div>
+        <div class="col-xs-2">
+            <div class="text-label">Haber Basico</div>
+            <p class=""><%- value.registro.haberBasico %></p>
+        </div>
+        <div class="col-xs-4">
+            <div class="text-label">Denominacion Puesto</div>
+            <p class=""><%- value.registro.denominacionPuesto %></p>
+        </div>
+        <div class="col-xs-4">
+            <div class="text-label">Denominacion Cargo</div>
+            <p class=""><%- value.registro.denominacionCargo %></p>
+        </div>
+        <div class="col-xs-12">
+            <div class="text-label">Objetivo</div>
+            <p class=""><%- value.registro.objetivo %></p>
+        </div>
+    </div>
+<%}%>
+
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <% if(config.verOperaciones) {%>
+            <th scope="col">Operación POA</th>
+            <% } %>
+            <th scope="col">Presupuesto</th>
+            <th scope="col">Item</th>
+            <th scope="col">Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% value?.detalles.forEach((item,index) => { %>
+            <tr>
+                <% if(config.verOperaciones) {%>
+                <td >
+                    <p class="text-label">Código:</p>
+                    <p><%= item?.operacion?.resultadoIntermedio?.codigo %></p>
+                    <p class="text-label">Descripción:</p>
+                    <p><%= item?.operacion?.resultadoIntermedio?.descripcion %></p>
+                </td>
+                <% } %>
+                <td>
+                    <p class="text-label">Partida:</p>
+                    <p><%= item?.presupuesto?.partidaPresupuestaria?.codigo %> - <%= item?.presupuesto?.partidaPresupuestaria?.descripcion %></p>
+                    <p class="text-label">Categoría:</p>
+                    <p><%= item?.presupuesto?.categoriaProgramatica?.descripcion %></p>
+                    <p class="text-label">Fuente:</p>
+                    <p><%= item?.presupuesto?.organismoFinanciador?.codigo %> - <%= item?.presupuesto?.organismoFinanciador?.organismo %> - <%= item?.presupuesto?.organismoFinanciador?.descripcion %></p>
+                    <% if (item?.presupuesto?.da) { %>
+                      <p class="text-label">Dirección Administrativa:</p>
+                        <% const da = `(${item?.presupuesto?.da?.codigo}) ${item.presupuesto?.da?.nombre}` %>
+                        <p><%= da %></p>
+                    <%}%>
+                </td>
+                <td>
+                    <p class="text-label">Descripción:</p>
+                    <p><%= item?.item?.descripcion %></p>
+                    <% if(item?.item?.unidadMedida){ %>
+                        <p class="text-label">Unidad de Medida:</p>
+                        <p><%= item?.item?.unidadMedida %></p>
+                    <% } %>
+                    <% if(item?.item?.precioUnitario){ %>
+                        <% const precio = (item?.item?.precioUnitario).toString() %>
+                        <% const precioAjustado = Number(precio.slice(0,(precio.indexOf('.'))+3)) %>
+                        <p class="text-label">Precio Unitario:</p>
+                        <p><%= Number(precio.slice(0,(precio.indexOf('.'))+3)) %></p>
+                    <% } %>
+                    <% if(item?.item?.cantidad){ %>
+                        <p class="text-label">Tiempo (Dias):</p>
+                        <p><%= item?.item?.cantidad %></p>
+                    <% } %>
+                </td>
+                <td>
+                    <p class="text-label">Monto Solicitado:</p>
+                    <p><%= parseFloat(item?.monto?.solicitado).toFixed(2) %> Bs.</p>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+    <% const total = value.detalles.reduce((accumulator, object) => {
+        const monto = object.monto.solicitado ? parseFloat(object.monto.solicitado) : 0
+        return accumulator + monto
+      }, 0)
+      %>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td><b>MONTO TOTAL</b></td>
+            <td colspan="2" style="font-size: 15px;"><%= total.toFixed(2) %> Bs.</td>
+        </tr>
+    </tfoot>
+</table>

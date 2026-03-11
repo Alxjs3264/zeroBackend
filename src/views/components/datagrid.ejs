@@ -1,0 +1,108 @@
+<% if (componente?.value?.valores && ((Array.isArray(componente?.value?.valores) && componente?.value?.valores.length === 0)|| componente?.value?.valores==='[]' )) { %>
+  <p>SIN DATOS</p>
+<% }else{ %>
+  <% const rows = Array.isArray(componente?.value?.valores)?componente?.value?.valores:JSON.parse(componente?.value?.valores) %>
+  <% if(componente?.typeInput === 'grid'){ %>
+    <div class="row">
+    <% rows.forEach((row, index) => { %>
+      <!-- <div class="col-xs-12 text-primary text-bold">REGISTRO NRO <%= index+1  %></div> -->
+      <div class="col-xs-12">
+        <div class="row">
+              <% componente?.options?.forEach((item,index) => { %>
+                <% if (item?.label !== 'Acciones' && item?.type!=='title'){ %>
+                  <% const _existe = row[item?.name] %>
+                  <% if(_existe){ %>
+                    <div class="col-xs-4">
+                    <div class="text-label"><%- item?.label %></div>
+                      <p class="">
+                        <% if (item?.type !== 'checkbox' && item?.type !== 'select'){ %>
+                          <%= row[item?.name] %>
+                        <% } %>
+                        <% if (item?.type === 'select'){ %>
+                          <% if (item?.url || item?.element?.url){ %>
+                              <% if (row[item?.name]){ %>
+                                <%= row[item?.name][item?.optionLabel] || 'ERROR' %>
+                              <% } %>
+                          <% }else{ %>
+                                  <% if (typeof row[item.name] === 'object'){%>
+                                    <% if (row[item.name]){ %>
+                                      <%= row[item.name][item.optionValue] || 'ERROR'%>
+                                    <% } %>
+                                  <% } else { %>
+                                    <% const _existe = item.options.find(e => e[item.optionValue] === row[item.name]) %>
+                                    <% if(_existe){ %>
+                                      <%= _existe[item.optionLabel] || 'ERROR'%>
+                                    <% } %>
+                                  <% } %>
+                          <% } %>
+                        <% } %>
+                        <% if (item.type === 'checkbox'){ %>
+                          <%= row[item.name] === 'true' ? 'SI' : 'NO' %>
+                        <% } %>
+                      </p>
+                    </div>
+                  <% } %>
+                <% } %>
+              <% }) %>
+        </div>
+      </div>
+    <% }) %>
+    </div>
+  <% }else {%>
+    <table class="table table-bordered" style="font-size: 12px;">
+      <thead>
+        <tr>
+          <% componente?.options?.forEach((item,index) => { %>
+          <% if (item.label !== 'Acciones' && item.type!=='title'){ %>
+          <th scope="col"><%= item.label %></th>
+          <% } %>
+          <% }) %>
+        </tr>
+      </thead>
+      <tbody>
+          <% rows.forEach((row, index) => { %>
+            <tr>
+              <% componente?.options?.forEach((column, index) => { %>
+                <% if (column.label !== 'Acciones' && column.type!='title'){ %>
+                  <% if (column.type !== 'checkbox' && column.type !== 'select'){ %>
+                    <td>
+                      <p class="text-label"><%= row[column.name] %></p>
+                    </td>
+                  <% } %>
+                  <% if (column.type === 'select'){ %>
+                    <% if (column.url || column?.element?.url){ %>
+                      <td>
+                        <% if (row[column?.name]){ %>
+                        <p> <%= row[column?.name][column?.optionLabel] || 'ERROR' %></p>
+                        <% } %>
+                      </td>
+                    <% }else{ %>
+                      <td>
+                        <p class="text-label">
+                            <% if (typeof row[column.name] === 'object'){%>
+                              <% if (row[column.name]){ %>
+                                <%= row[column.name][column.optionLabel] || 'ERROR'%>
+                              <% } %>
+                            <% } else { %>
+                              <% const _existe = column.options.find(e => e[column.optionValue] === row[column.name]) %>
+                              <% if(_existe){ %>
+                                <%= _existe[column.optionLabel] || 'ERROR'%>
+                              <% } %>
+                            <% } %>
+                        </p>
+                      </td>
+                    <% } %>
+                  <% } %>
+                  <% if (column.type === 'checkbox'){ %>
+                    <td>
+                      <p class="text-label"><%= row[column.name] === 'true' ? 'SI' : 'NO' %></p>
+                    </td>
+                  <% } %>
+                <% } %>
+              <% }) %>
+            </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+<% } %>

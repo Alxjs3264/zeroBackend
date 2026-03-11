@@ -1,0 +1,44 @@
+<thead>
+    <tr style="background-color:#daf2f4; height: 4px;"></tr>
+    <tr>
+        <td style="width:20%; font-size: 90%; background-color:#daf2f4; padding: 6px;">
+            <span style="font-weight:bold;">Remitente:</span>
+        </td>
+        <td colspan="4" style="padding: 6px; font-size: 90%;">
+            <span><%= datos.remitenteInicial.nombreUsuario %></span>
+        </td>
+        <td rowspan="4" align="center" style="width: 28%;">
+            <small>HOJA DE RUTA</small><br>
+            <b><%= datos.flujoDocumental.codigoFlujo %></b>
+        </td>
+    </tr>
+    <tr>
+        <td style="width:20%; font-size: 90%;background-color:#daf2f4; padding: 6px;">
+            <span style="font-weight:bold;">Cargo Remitente:</span>
+        </td>
+        <td colspan="4" style="padding: 6px; font-size: 90%;"><%= datos.remitenteInicial.nombreCargo %></td>
+    </tr>
+    <tr>
+        <td style="width:20%; font-size: 90%; background-color:#daf2f4; padding: 6px;">
+            <span style="font-weight:bold;">Tramite:</span>
+        </td>
+        <td colspan="4" style="padding: 6px; font-size: 90%;">
+            <span><%= datos.flujoDocumental.solicitudPlantilla.nombre %></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="width:20%; font-size: 90%; background-color:#daf2f4; padding: 6px;">
+            <span style="font-weight:bold;">Fecha de documento</span>
+        </td>
+        <td colspan="4" style="width: 55%; padding: 6px; font-size: 90%;"><%= datos.documento.fechaDocumento %></td>
+    </tr>
+    <tr>
+        <td style="background-color:#daf2f4; padding: 6px; font-size: 90%;">
+            <span style="font-weight:bold;">Referencia</span>
+        </td>
+        <td style="width:20%; padding: 6px; font-size: 90%;" colspan="5">
+            <%= datos.documento.asunto %>
+        </td>
+    </tr>
+    <tr style="background-color:#daf2f4; height: 4px;"></tr>
+</thead>

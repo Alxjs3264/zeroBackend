@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+        <style>
+            body {
+                font-family: Poppins, -apple-system, Helvetica Neue, Helvetica, Arial, sans-serif;
+                font-size: 10pt;
+                margin-left: 2cm;
+                margin-right: 2cm;
+                background-color: rgba(255, 255, 255, 0) !important;
+                background: transparent !important;
+                max-height: '<%= altoPagina %>';
+            }
+
+            .correlativo {
+                padding-top: 0.5cm;
+                background-color: white !important;
+            }
+
+            .background {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                padding-top: auto;
+                z-index: -3000;
+                opacity: 0.85;
+                text-align: center;
+            }
+
+            .background img {
+                margin: 200px auto;
+                /* margin-top: 200px; */
+            }
+
+            .background-chacana {
+                position: fixed;
+                top: 770px;
+                left: 260px;
+                width: 100%;
+                height: 100%;
+                /* padding-top: auto; */
+                z-index: -10000;
+                opacity: 0.18;
+                text-align: center;
+            }
+
+            .background-chacana img {
+                height: auto;
+                width: 540px;
+            }
+
+            .sepdavi {
+                position: fixed;
+                z-index: -100;
+                opacity: 0.8;
+                top: 85rem;
+                width: 100px;
+                margin-left: -1cm;
+            }
+
+            .sepdavi div {
+                /* margin: 20px 0 20px 0; */
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+
+            .n-ext {
+                position: absolute;
+                top: 2cm;
+                right: 3cm;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- <% if (dimension.includes('width')) { %>
+        <div
+            style="
+                position: absolute;
+                top: 0;
+                left: 48%;
+                transform: translate(-50%, -50%); 
+            "
+        >
+            <img <%- dimension %> src="<%= `data:image/png;base64,${logo}`%>" />
+        </div>
+        <% } else { %>
+        <div
+            style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                transform: translate(-50%, -50%); 
+            "
+        >
+            <img <%- dimension %> src="<%= `data:image/png;base64,${logo}`%>" />
+        </div>
+        <% } %> -->
+        <div class="row full-width flex flex-center align-center justify-center">
+            <div class="col-xs-6">
+                <img <%- dimension %> src="<%= `data:image/png;base64,${logo}`%>" />
+            </div>
+            <% if (formatoEspecial==='N-EXT' ) { %>
+            <div class="<%=formatoEspecial.toLowerCase()%>">
+                <!-- <p>
+                    <% if (documento?.cite) { %> 
+                        <% if (fechaLiteral) { %>
+                            <%= formatoFechaLiteral %>
+                        <% } else { %>
+                            Fecha Emision : <%= documento?.fechaDocumento %>
+                        <% } %> <br/>
+                        <%= documento?.cite %>
+                    <% } else { 
+                        let date = new Date(); %>
+                        <% if (fechaLiteral) { %>
+                            <%= formatoFechaLiteral %>
+                        <% } else { %>
+                            Fecha Emision : <%= documento?.fechaDocumento %>
+                        <% } %>
+                    <% } %>
+                </p> -->
+            </div>
+            <% } else { %>
+            <div class="col-xs-6 text-right correlativo">
+                <p>
+                    <% if (documento?.flujoDocumental?.codigoFlujo) { %>
+                        Hoja de Ruta : <%= documento?.flujoDocumental?.codigoFlujo %><br />
+                    <% } if (documento?.cite) { %> 
+                        Cite : <%= documento?.cite %><br />
+                        <% if (fechaLiteral) { %> 
+                            <%= formatoFechaLiteral %>
+                        <% } else { %> 
+                            Fecha Emision : <%= documento?.fechaDocumento %> 
+                        <% } %>
+                    <% } else { let date=new Date(); %> 
+                        <% if (fechaLiteral) { %> 
+                            <%= formatoFechaLiteral %> 
+                        <% } else { %> 
+                            Fecha Emision : <%= documento?.fechaDocumento %> 
+                        <% } %>
+                    <% } %>
+                </p>
+            </div>
+            <% } %>
+            <!-- <div class="col-xs-5 text-right"></div> -->
+            <% if(documento && documento.createdAt && new Date("6/19/24") < new Date(documento.createdAt.replace(/(\d{2})-(\d{2})-(\d{4}) (\d{2}:\d{2}:\d{2})/, '$3-$2-$1T$4' )) && sepdavi1 && sepdavi2) { %>
+            <div class="sepdavi" align="center">
+                <div align="center"><img style="width: 75px;" src="<%= `data:image/png;base64,${sepdavi1}`%>" /></div>
+                <div align="center"><img style="width: 100px;" src="<%= `data:image/png;base64,${sepdavi2}`%>" /></div>
+            </div>
+            <% } %>
+        </div>
+        <% if (['OBSERVADO', 'CANCELADO' ,'INVALIDO'].includes(documento?.estado)) { %>
+        <div class="background" align="center">
+            <img src="<%= `data:image/png;base64,${waterDraft}`%>" />
+        </div>
+        <% } %> <% if (fondoChacana) { %>
+        <div class="background-chacana" hidden>
+            <img src="<%= `data:image/png;base64,${imagenFondoChacana}`%>" alt="" />
+        </div>
+        <% } %>
+    </body>
+</html>

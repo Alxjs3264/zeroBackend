@@ -1,0 +1,39 @@
+<div class="row">
+    <% if (options.some(option => option.name === 'area')) { %>
+        <div class="col-xs-6">
+            <div class="text-label"><%- options.find(option => option.name === 'area').label %></div>
+            <p class="" style="text-wrap: wrap;"><%- value?.cargo?.unidad?.nombreArea %></p>
+        </div>
+    <% } %>
+    <% if (options.some(option => option.name === 'nro_item')) { %>
+        <div class="col-xs-2">
+            <div class="text-label"><%- options.find(option => option.name === 'nro_item').label %></div>
+            <p class=""><%- value?.cargo?.nroItem %></p>
+        </div>
+    <% } %>
+    <% if (options.some(option => option.name === 'cargo')) { %>
+        <% if (options.some(option => option.name === 'nro_item')) { %>
+        <div class="col-xs-4">
+        <% } else { %>
+        <div class="col-xs-6">
+        <% } %>
+            <div class="text-label"><%- options.find(option => option.name === 'cargo').label %></div>
+            <p class="" style="text-wrap: wrap;"><%- value?.cargo?.descripcion %></p>
+        </div>
+    <% } %>
+    <% if (options.some(option => option.name === 'usuario')) { %>
+        <div class="col-xs-3">
+            <div class="text-label"><%- options.find(option => option.name === 'usuario').label %></div>
+            <p class=""><%- value?.usuario %></p>
+        </div>
+    <% } %>
+    <% if (options.some(option => option.name === 'nivel')) { %>
+        <div class="col-xs-3">
+            <div class="text-label"><%- options.find(option => option.name === 'nivel').label %></div>
+            <p class=""><%- value?.cargo?.nivel %></p>
+        </div>
+    <% } %>
+</div>
+<!-- <div class="row">
+    
+</div> -->

@@ -1,0 +1,61 @@
+<h3><b>Información de la Notificación</b></h3>
+<div class="text-label">Asunto</div>
+<p class=""><%- value.asunto %></p>
+<br/>
+<h4 class="text-primary"><b>Notificación(es) a Ciudadano(s)</b></h4>
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead style="background-color: #064d78; color: white; font-weight: bold;">
+        <tr>
+            <th scope="col" class="text-center">Persona</th>
+            <th scope="col" class="text-center">Tipo Notificación</th>
+            <th scope="col" class="text-center">Información de la Notificación</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% value?.registros.forEach((item,index) => { %>
+            <tr>
+                <td>
+                    <p class="text-label">Numero Documento:</p>
+                    <p><%= item?.persona.numeroDocumento %></p>
+                    <p class="text-label">Fecha Nacimiento:</p>
+                    <p><%= item?.persona.fechaNacimiento %></p>
+                    <p class="text-label">Nombre Completo:</p>
+                    <p><%= item?.persona.nombres %> <%= item?.persona.apellidos %></p>
+                </td>
+                <td class="text-center">
+                    <p><%= item?.tipo %></p> 
+                </td>
+                <td>
+                    <p class="text-label">Enlaces Adjuntos:</p>
+                        <% if(item.enlaces.length>0){ %>
+                            <% item.enlaces.forEach((enlace,index) => { %>
+                                <div class="row">
+                                    <div class="col-xs-9">
+                                        <div><%= enlace.label %></div>
+                                        <div class="caption">
+                                            <a href="<%= enlace.url%>" target="_blank">
+                                                <%= enlace.url.substr(0,90) %> ....
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span class="text-success">FIRMADO DIGITALMENTE</span>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% }else{ %>
+                            <p class="text-danger">SIN ENLACES ADJUNTOS</p>
+                        <% } %>
+                    <p class="text-label">Link Notificacion:</p>
+                    <% if(item.archivoNotificacion){ %>
+                        <p><a href="<%= item?.archivoNotificacion %>" target="_blank">
+                            <%= item?.archivoNotificacion %>
+                        </a></p>
+                    <% }else{ %>
+                    <p class="text-danger">PENDIENTE DE NOTIFICACION</p>
+                    <% } %>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

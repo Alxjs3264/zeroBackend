@@ -1,0 +1,224 @@
+<%
+function commify(n) {
+    if (n) {
+        const parts = n.toString().split(".");
+        const numberPart = parts[0];
+        const decimalPart = parts[1];
+        const thousands = /\B(?=(\d{3})+(?!\d))/g;
+        return numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "");
+    }
+    return n === 0 ? '0.00' : '';
+}
+%>
+<%if (!config.simplificado) {%>
+    <table class="table table-bordered" style="font-size: 12px;">
+        <thead>
+            <tr>
+                <th scope="col">Operación POA</th>
+                <th scope="col">Presupuesto</th>
+                <% if (!config?.item) { %>
+                    <th scope="col">Item</th>
+                <%}%>
+                <% if (config?.impuesto) { %>
+                    <th scope="col">Impuestos</th>
+                <%}%>
+                <th scope="col">Monto</th>
+                <% if (['efd6ca02-71b2-412c-a437-162316ac1fb4', '63449bf1-18a9-4eae-b8ae-aff164e27a95'].includes(value?.tipoViaje?.id)) { %>
+                    <th scope="col">Monto US$</th>
+                <%}%>
+            </tr>
+        </thead>
+        <tbody>
+            <% let total = 0 %>
+            <% let totalDolar = 0 %>
+            <% value?.detalles.forEach((item,index) => { %>
+                <tr>
+                    <td>
+                        <p class="text-label">Código:</p>
+                        <p><%= item?.operacion?.ri?.codigo %></p>
+                        <% if (!config?.descripcionPOA) { %>
+                        <p class="text-label">Descripción:</p>
+                        <p><%= item?.operacion?.ri?.descripcion %></p>
+                        <%}%>
+                    </td>
+                    <td>
+                        <% const partidaPresupuestaria = `${item?.presupuesto?.partidaPresupuestaria?.codigo} ${item?.presupuesto?.partidaPresupuestaria?.descripcion}` %>
+                        <p class="text-label">Partida:</p>
+                        <p><%= partidaPresupuestaria %></p>
+                        <p class="text-label">Categoría:</p>
+                        <p><%= parseInt(item?.monto?.solicitado) === 0 ? 'NO CORRESPONDE' : item?.presupuesto?.categoriaProgramatica?.descripcion %></p>
+                        <% const fuenteOrganismo = `${item?.presupuesto?.fuenteFinanciamiento?.fuente}${item?.presupuesto?.fuenteFinanciamiento?.organismo ? ' ' + item?.presupuesto?.fuenteFinanciamiento?.organismo : ''}` %>
+                        <% const fuenteFinanciamiento = `${fuenteOrganismo} ${item?.presupuesto?.fuenteFinanciamiento?.descripcion}` %>
+                        <p class="text-label">Fuente:</p>
+                        <p><%= parseInt(item?.monto?.solicitado) === 0 ? 'OTRA FUENTE DE FINANCIAMIENTO': fuenteFinanciamiento %></p>
+                        <% if (item?.presupuesto?.da) { %>
+                            <p class="text-label">Dirección Administrativa:</p>
+                            <% const da = `(${item?.presupuesto?.da?.codigo}) ${item.presupuesto?.da?.nombre}` %>
+                            <p><%= da %></p>
+                        <%}%>
+                        <% if (!config?.group) { %>
+                        <p class="text-label">Saldo:</p>
+                        <%const saldo = commify(item?.presupuesto?.saldo)%>
+                        <p><%= saldo %> Bs.</p>
+                        <%}%>
+                    </td>
+                    <% if (!config?.item) { %>
+                    <td>
+                        <p class="text-label">Descripción:</p>
+                        <p><%= item?.item?.descripcion %></p>
+                        <% if (config?.loteItem && item?.item?.lote) { %>
+                        <p class="text-label">Lote:</p>
+                        <p><%= item?.item?.lote %></p>
+                        <% } %>
+                        <p class="text-label">Unidad de Medida:</p>
+                        <p><%= item?.item?.unidadMedida.nombre %></p>
+                        <p class="text-label">Cantidad:</p>
+                        <p><%= item?.item?.cantidad %></p>
+                        <p class="text-label">Precio Unitario:</p>
+                        <%const precioUnitario = commify(item?.item?.precioUnitario)%>
+                        <p><%= precioUnitario %> Bs.</p>
+                        <% if (config?.devengado) { %>
+                            <p class="text-label">Devengado:</p>
+                            <%const devengado = commify(item?.item?.devengado)%>
+                            <p><%= devengado %> Bs.</p>
+                        <%}%>
+                        <% if (config?.multa) { %>
+                            <p class="text-label">Multa:</p>
+                            <%const multa = commify(item?.item?.multa)%>
+                            <p><%= multa %> Bs.</p>
+                        <%}%>
+                    </td>
+                    <%}%>
+                    <% if (config?.impuesto) { %>
+                        <td>
+                            <p class="text-label">Tipo de Impuesto:</p>
+                            <p><%= item?.item?.tipoImpuesto.nombre %></p>
+                            <p class="text-label">N° Factura / Recibo:</p>
+                            <p><%= item?.item?.factura %></p>
+                            <p class="text-label">Fecha Factura / Recibo:</p>
+                            <p><%= item?.item?.fechaFactura %></p>
+                            <p class="text-label">RC-IVA:</p>
+                            <%const iva = commify(item?.item?.iva)%>
+                            <p><%= iva %> Bs.</p>
+                            <p class="text-label">IUE:</p>
+                            <%const iue = commify(item?.item?.iue)%>
+                            <p><%= iue %> Bs.</p>
+                            <p class="text-label">IT:</p>
+                            <%const it = commify(item?.item?.it)%>
+                            <p><%= it %> Bs.</p>
+                        </td>
+                    <%}%>
+                    <td>
+                        <p class="text-label">Precio Referencial:</p>
+                        <%const solicitado = commify(item?.monto?.solicitado)%>
+                        <p><%= solicitado %> Bs.</p>
+                        <% if (config?.impuesto) { %>
+                            <p class="text-label">Monto Retenido:</p>
+                            <%const retenido = commify(item?.monto?.retenido)%>
+                            <p><%= retenido %> Bs.</p>
+                            <p class="text-label">Liquido Pagable:</p>
+                            <%const liquido = commify((item?.monto?.solicitado - item?.monto?.retenido).toFixed(2))%>
+                            <p><%= liquido %> Bs.</p>
+                        <% } %>
+                        <% if (config?.certificado){%>
+                            <% total += parseFloat(item?.monto?.certificado) %>
+                            <p class="text-label">Monto Certificado:</p>
+                            <%const certificado = commify(item?.monto?.certificado)%>
+                            <p><%= certificado %> Bs.</p>
+                        <%} else {%>
+                            <% total += parseFloat(item?.monto?.solicitado) %>
+                        <%}%>
+                        <% if (config?.pagado){%>
+                            <p class="text-label">Monto Pagado:</p>
+                            <%const pagado = commify(item?.monto?.pagado)%>
+                            <p><%= pagado %> Bs.</p>
+                        <%}%>
+                    </td>
+                    <% if (['efd6ca02-71b2-412c-a437-162316ac1fb4', '63449bf1-18a9-4eae-b8ae-aff164e27a95'].includes(value?.tipoViaje?.id)) { %>
+                        <td>
+                            <p class="text-label">Monto Solicitado:</p>
+                            <%const montoDolarSolicitado = commify(item?.montoDolar?.solicitado)%>
+                            <p><%= montoDolarSolicitado %> US$.</p>
+                            <% if (config?.certificado){%>
+                                <% totalDolar += parseFloat(item?.montoDolar?.certificado) %>
+                                <p class="text-label">Monto Certificado:</p>
+                                <%const montoDolarCertificado = commify(item?.montoDolar?.certificado)%>
+                                <p><%= montoDolarCertificado %> US$.</p>
+                            <%} else {%>
+                                <% totalDolar += parseFloat(item?.montoDolar?.solicitado) %>
+                            <%}%>
+                            <% if (config?.pagado){%>
+                                <p class="text-label">Monto Pagado:</p>
+                                <%const montoDolarPagado = commify(item?.montoDolar?.pagado)%>
+                                <p><%= montoDolarPagado %> US$.</p>
+                            <%}%>
+                        </td>
+                    <% } %>
+                </tr>
+            <% }) %>
+            <tr>
+                <td></td>
+                <td></td>
+                <% if (!config?.item) { %>
+                    <td></td>
+                <%}%>
+                <% if (config?.impuesto) { %>
+                    <td></td>
+                <%}%>
+                <%const totales = commify(total)%>
+                <td>Total: <%= totales %></td>
+                <% if (['efd6ca02-71b2-412c-a437-162316ac1fb4', '63449bf1-18a9-4eae-b8ae-aff164e27a95'].includes(value?.tipoViaje?.id)) { %>
+                    <%const totalesDolar = commify(totalDolar)%>
+                    <td>Total: <%= totalesDolar %></td>
+                <% } %>
+            </tr>
+        </tbody>
+    </table>
+<%} else {%>
+    <table  class="table table-bordered" style="font-size: 12px;">
+        <thead>
+            <tr>
+                <th class="text-label text-center" rowspan="2"><b>Código POA</b></th>
+                <th class="text-label text-center" colspan="3"><b>Presupuesto</b></th>
+                <th class="text-label text-center" colspan="4"><b>Item</b></th>
+                <th class="text-label text-center" rowspan="2"><b>Monto</b></th>
+            </tr>
+            <tr>
+                <th class="text-label text-center"><b>Categoria Programatica</b></th>
+                <th class="text-label text-center"><b>Fuente de Financiamiento</b></th>
+                <th class="text-label text-center"><b>Partida Presupuestaria</b></th>
+                <th class="text-label text-center"><b>Descripción</b></th>
+                <th class="text-label text-center"><b>Unidad de Medida</b></th>
+                <th class="text-label text-center"><b>Cantidad</b></th>
+                <th class="text-label text-center"><b>Precio Unitario</b></th>
+            </tr>
+        </thead>
+        <% let total = 0 %>
+        <tbody>
+            <% value?.detalles.forEach((item,index) => { %>
+                <tr>
+                    <% total += parseFloat(item?.monto?.solicitado) %>
+                    <td><%= item?.operacion?.ri?.codigo %></td>
+                    <td><%= item?.presupuesto?.categoriaProgramatica?.descripcion.split(' ')[0] %></td>
+                    <% const fuenteOrganismo = `${item?.presupuesto?.fuenteFinanciamiento?.fuente}${item?.presupuesto?.fuenteFinanciamiento?.organismo ? ' ' + item?.presupuesto?.fuenteFinanciamiento?.organismo : ''}` %>
+                    <td><%= fuenteOrganismo %></td>
+                    <td><%= item?.presupuesto?.partidaPresupuestaria?.codigo %></td>
+                    <td><%= item?.item?.descripcion %></td>
+                    <td><%= item?.item?.unidadMedida.nombre %></td>
+                    <td><%= item?.item?.cantidad %></td>
+                    <%const precioUnitario = commify(item?.item?.precioUnitario)%>
+                    <td><%= precioUnitario %> Bs.</td>
+                    <%const solicitado = commify(item?.monto?.solicitado)%>
+                    <td><%= solicitado %> Bs.</td>
+                </tr>
+            <% }) %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-label text-right" colspan="8"><b>TOTALES:</b></td>
+                <%const totales = commify(total)%>
+                <td><b><%= totales %> Bs.</b></td>
+            </tr>
+        </tfoot>
+    </table>
+<%}%>

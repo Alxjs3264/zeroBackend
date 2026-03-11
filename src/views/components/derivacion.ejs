@@ -1,0 +1,41 @@
+<div class="row">
+    <% const { para, via, de, referencia, cargo, procedencia, nombreCompleto } = componente.value?.valores %>
+    <%- include('derivacion/deriva.ejs', 
+    {
+        config: componente?.configuracion?.configPara,
+        title: 'Para',
+        value: para
+    }) %>
+    <% if (via || via?.length > 0) { %>
+        <%- include('derivacion/deriva.ejs', 
+        {
+            config: componente?.configuracion?.configVia,
+            title: 'Via',
+            value: via
+        }) %>
+    <% } %>
+    <% if (componente?.configuracion?.configDe?.externo) { %>
+        <%- include('derivacion/deExterno.ejs', 
+        {
+            config: componente?.configuracion?.configDe,
+            cargo: cargo,
+            procedencia: procedencia,
+            nombreCompleto: nombreCompleto
+        }) %>
+    <% } else { %>
+        <%- include('derivacion/deriva.ejs', 
+        {
+            config: componente?.configuracion?.configDe,
+            title: 'De',
+            value: de
+        }) %>
+    <% } %>
+
+    <div class="col-xs-2 text-bold">Referencia</div>
+    <div class="col-xs-1 text-center text-bold">:</div>
+    <div class="col-xs-9 text-justify" style="padding-left: 28px;"><%= referencia %></div>
+</div>
+<hr class="q-separator q-separator--horizontal q-my-md" aria-orientation="horizontal">
+<% if (referencias?.count > 0) { %>
+    <p><b>Documentos Referenciados : </b><%- referencias.rows %></p>
+<% } %>

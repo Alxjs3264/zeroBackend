@@ -1,0 +1,51 @@
+"use strict";
+
+const path = require("path");
+
+const app = {
+  notificaciones: {
+    BASE_URL : 'https://localhost:4000',
+    TOKEN    : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM5ZmY3NmEwLWFmNGMtNDBmYS1iMDM4LWY2ZGI3NTA4NzAyYSIsIm5vbWJyZSI6IlpFUk8iLCJpZEVudGlkYWQiOiI3NDUwMzRkYS0wNmNiLTRkOTgtOGZlZS00Yzk4MmFkZmJiMjIiLCJpYXQiOjE2NDg2NjE2OTN9.atbZ5-fjpDXEIo32lCjbx_6eWezpEppK-qpWr39sJvg'
+  },
+  appPort         : 3000,
+  fileStoragePath : 'files',
+  pdfReciclados     : '/var/www/PDF_RECICLADOS',
+  cookieDori: 'oc7gagq9n50pivk3nt1n3e2qp7',
+  doriUrlSuperBuscador: 'http://192.168.100.6/index.php?view=seguimiento&action=super_buscar_reg',
+  BACKEND_URL_LOCAL : 'https://localhost:3001',
+  backendUrl      : 'http://localhost:3001/',
+  FRONTEND_VERIFICAR : 'https://zero.justicia.gob.bo/verificar',
+  sipfaUrl : 'https://zero.justicia.gob.bo/apisipfa/apisipfa/api/',
+  logsConfig      : {
+    path       : 'logs/logs.log',
+    level      : 'debug',
+    maxLogSize : 10485760,
+    backups    : 8
+  },
+  rootPath                    : path.resolve(__dirname),
+  deletePath                  : '/var/www/PDF_RECICLADOS',
+  aprobacionCiudadaniaDigital : false,
+  obtenerRegistrosSRH         : false,
+  verificarConexionIOP        : false,
+  incluirOsTickets            : true,
+  limiteFirmasPendientes: 0,
+  ARCHIVOS_PUBLICOS : path.join(__dirname, '../../../public'),
+  bandejaExterna    : false,
+  servicios         : {
+    dori: {
+      url   : 'https://testapidori.justicia.gob.bo/backend/api/dori/registros/buscar-flujo?codigo={codigoDori}',
+      token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJTSUlBUkJFIiwic2VydmljaW8iOiJET1JJIiwiaWF0IjoxNjM4ODE0ODA3fQ.M0TSifP4SrShTyE72CrTDeo5jGlFgS-QJAx-eFYi1SA'
+    },
+    srh: {
+      url   : 'http://192.168.3.173:3006',
+      iopToken : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBkYWNiODYwLTQ1OWYtNDM3MS1iMzFiLWI4NWEzZmExYWY5ZSIsIm5vbWJyZSI6Inplcm8iLCJpZFVzdWFyaW8iOm51bGwsImlhdCI6MTcwNjg4OTQ0OH0.tR04PxHJVSHMZZtuSnxIfhKVkTCvA6EAsmWh9BvAR4o'
+    },
+    osTicket: {
+      url   : 'http://192.168.3.173/osTicket/',
+      token : '5a1d6s5d46a5sd6as5d4a63asd1',
+      secret: 'BFasdnoa8sdabnsdo8fasda9s8dasd5a'
+    }
+  }
+};
+
+module.exports = app;

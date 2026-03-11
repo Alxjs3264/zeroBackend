@@ -1,0 +1,28 @@
+<p><%- componente.label %></p>
+
+<div class="form-check">
+    <% componente.options.forEach(item => { %>
+        <div class="form-check-inline">
+            <div class="row">
+            <% if (item.val === componente?.value?.valores) {%>
+                <div class="col-xs-1 text-center">
+                    <svg class="q-radio__bg" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12,22a10,10 0 0 1 -10,-10a10,10 0 0 1 10,-10a10,10 0 0 1 10,10a10,10 0 0 1 -10,10m0,-22a12,12 0 0 0 -12,12a12,12 0 0 0 12,12a12,12 0 0 0 12,-12a12,12 0 0 0 -12,-12"></path>
+                        <path d="M12,6a6,6 0 0 0 -6,6a6,6 0 0 0 6,6a6,6 0 0 0 6,-6a6,6 0 0 0 -6,-6"></path>
+                    </svg>
+                </div>
+            <% } else {%>
+                <div class="col-xs-1">
+                    <svg class="q-radio__bg_not_selected" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12,22a10,10 0 0 1 -10,-10a10,10 0 0 1 10,-10a10,10 0 0 1 10,10a10,10 0 0 1 -10,10m0,-22a12,12 0 0 0 -12,12a12,12 0 0 0 12,12a12,12 0 0 0 12,-12a12,12 0 0 0 -12,-12"></path>
+                    </svg>
+                </div>
+                <% } %> 
+                <div class="col-xs-11 caption">
+                    <%- item.label %>
+                </div>
+            </div>
+        </div>
+    <% }); %> 
+</div>
+<br><br>

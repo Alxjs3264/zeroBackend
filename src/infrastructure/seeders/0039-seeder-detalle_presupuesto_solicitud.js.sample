@@ -1,0 +1,49 @@
+'use strict';
+
+const { setTimestampsSeeder } = require('../lib/util');
+
+// Datos de producción
+let items = [
+  {
+    id                : 'bd5d657f-8246-41d2-b1b6-f8f8f9b8f60a',
+    id_solicitud      : '92961bd4-14a6-4b27-a1ec-22c73fdd7ecf',
+    id_presupuesto    : '651c6cf5-f15b-47da-a077-caa1f9043092',
+    id_unidad_medida  : '9e000e89-3456-44da-8ac4-578c70011d3d',
+    id_proveedor      : '40f8bdbe-8d89-493c-9617-ac832393f046',
+    descripcion       : 'Toners',
+    imputacion        : false,
+    cantidad          : 1,
+    precio_unitario   : 41804.00,
+    monto_solicitado  : 41804.00,
+    monto_certificado : 39116.00,
+    monto_preventivo  : 39116.00
+  },
+  {
+    id                : 'd1a3dffa-c4f7-4926-8644-4957973023a3',
+    id_solicitud      : '92961bd4-14a6-4b27-a1ec-22c73fdd7ecf',
+    id_presupuesto    : '651c6cf5-f15b-47da-a077-caa1f9043092',
+    id_unidad_medida  : '9e000e89-3456-44da-8ac4-578c70011d3d',
+    id_proveedor      : '40f8bdbe-8d89-493c-9617-ac832393f046',
+    descripcion       : 'Tintas',
+    imputacion        : false,
+    cantidad          : 1,
+    precio_unitario   : 3141.00,
+    monto_solicitado  : 3141.00,
+    monto_certificado : 2976.00,
+    monto_preventivo  : 2976.00
+  }
+];
+
+items = setTimestampsSeeder(items);
+
+module.exports = {
+  up (queryInterface, Sequelize) {
+    return queryInterface.bulkInsert('presupuesto_detalle_presupuesto_solicitud', items, {})
+      .then(async () => {})
+      .catch(error => {
+        if (error.message.indexOf('already exists') > -1) return;
+        console.error(error);
+      });
+  },
+  down (queryInterface, Sequelize) {}
+};

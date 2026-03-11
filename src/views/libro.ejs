@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <%- include('./css/font.ejs') %>
+  <%- include('./css/bootstrap.ejs') %>
+  <title>PDF</title>
+  <style>
+       body {
+            font-family: Poppins,-apple-system,Helvetica Neue,Helvetica,Arial,sans-serif;
+            font-size: 13pt;
+            line-height: 1.5;
+        }
+        .form-check {
+            border: 1px solid #e4e6ef;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 4px 4px 0 0;
+        }
+        .form-check-inline {
+            display: inline-block;
+            align-items: center!important;
+            height: 40px;
+            padding-top: 9px;
+            padding-bottom: 9px;
+        }
+        .center {
+            display: inline-block;
+            vertical-align: middle;
+            height: 40px;
+        }
+        .q-radio__bg {
+            fill: #023859;
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+        }
+        .q-radio__bg_not_selected {
+            font-size: 22px;
+            width: 1em;
+            height: 1em;
+            fill: rgba(0, 0, 0, 0.54);
+        }
+        .subtitle, .title {
+            font-weight: bold;
+            margin: 0 0 10px;
+        }
+        .title {
+            font-size: 29px;
+            line-height: 35px;
+            font-weight: bold;
+        }
+        .subtitle {
+            font-size: 23px;
+            font-weight: bold;
+            line-height: 29px;
+        }
+        .text-bold {
+            font-weight: 700;
+        }
+        .text-h4 {
+            font-size: 20pt;
+            font-weight: 700;
+            letter-spacing: .009em;
+        }
+        .q-separator--horizontal {
+            display: block;
+            height: 2px;
+        }
+        .q-separator {
+            background: black;
+            border: 0;
+            flex-shrink: 0;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            transition: background .3s,opacity .3s;
+        }
+        .text-label{
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .derivacion{
+            margin-bottom: 10px;
+        }
+        ul { padding: 0; margin: 0; }
+        .q-li {
+            box-sizing: border-box;
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        table { page-break-inside:auto }
+        tr    { page-break-inside:avoid; page-break-after:auto }
+        thead { display:table-header-group }
+        tfoot { display:table-footer-group }
+  </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <p class="text-h4 text-bold">LIBRO DE REGISTRO</p>
+        </div>
+        <% if (flujo.fechaDesde || flujo.fechaHasta) { %>
+            <div class="col-xs-12 text-center">
+                <p class="text-label text-bold">
+                    <% if (flujo.fechaDesde) { %>
+                        <%= `${flujo.fechaDesde}` %>
+                    <% } %>
+                    <% if (flujo.fechaDesde && flujo.fechaHasta) { %>
+                        al
+                    <% } %>
+                    <% if (flujo.fechaHasta) { %>
+                        <%= `${flujo.fechaHasta}` %>
+                    <% } %>
+                </p>
+            </div>
+        <% } %>
+        <% if (flujo.areaRemitente) { %>
+            <div class="col-xs-12 text-center">
+                <p class="text-label text-bold">Unidad/Área: <%= flujo.nombreArea %> </p>
+            </div>
+        <% } %>
+        <div class="col-xs-12">
+            <table class="table table-bordered" style="font-size: 12px;">
+                <thead>
+                  <tr>
+                    <th scope="col">Nro</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Hoja de Ruta</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Remitente</th>
+                    <th scope="col">Cargo del Remitente</th>
+                    <th scope="col">Unidad/Área Remitente</th>
+                    <th scope="col">Unidad/Área Destino</th>
+                    <th scope="col">Referencia</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (const [index, row] of flujo.rows.entries()) {%>
+                    <tr>
+                      <th scope="row"><%= index + 1 %></th>
+                      <td><%= `${row.createdAt.getDate()}-${row.createdAt.getMonth() + 1}-${row.createdAt.getFullYear()} ${row.createdAt.getHours()}:${row.createdAt.getMinutes()}:${row.createdAt.getSeconds()}` %></td>
+                      <td><%= row.codigoFlujo %></td>
+                      <td><%= row.tipoFlujo %></td>
+                      <td><%= row.remitente %></td>
+                      <td><%= row.cargoRemitente %></td>
+                      <td><%= row.areaRemitente %></td>
+                      <td><%= row.areaDestino %></td>
+                      <td><%= row.referencia %></td>
+                    </tr>
+                  <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-12">
+            <br />
+            <br />
+        </div>
+        <div class="col-xs-12 text-center">
+            <p>.............................................................................................................</p>
+            <p>RECIBI CONFORME</p>
+        </div>
+    </div>
+</body>
+</html>

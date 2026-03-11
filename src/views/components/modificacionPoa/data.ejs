@@ -1,0 +1,31 @@
+<% if (cerrar) { %>
+</tr>
+<tr>
+<% } %>
+<% console.log(cerrar) %>
+<% console.log(nivel) %>
+<% console.log(operacion.codigo) %>
+<% if (operacion.codigo) { %>
+  <td rowspan="<%= result[operacion.codigo] %>">
+    <b><%= operacion.estructura.sigla %> <%= operacion.codigo %> - Ponderación <%= operacion.ponderacion %>%:</b> <%= operacion.descripcion %>
+  </td>
+<% } %>
+<% if (nivel < 5) { %>
+  <% if (operacion?.children?.length > 0) {
+    let cerrar = false
+    for (const op of operacion?.children) { %>
+      <%- include('data.ejs', 
+      {
+        operacion: op,
+        result: result,
+        nivel: nivel + 1,
+        cerrar: cerrar
+      }) %>
+    <% cerrar = true
+    }
+  } else { %>
+    <td colspan="<%- 5 - nivel %>">
+      <b>No tiene operaciones la unidad asignada</b>
+    </td>
+  <% } %>
+<% } %>

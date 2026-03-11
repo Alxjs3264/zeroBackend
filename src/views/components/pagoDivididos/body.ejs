@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-xs-6">
+        <div class="text-label">Detalle de Pago</div>
+        <p class=""><%- value?.detallePago %></p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+        <div class="text-label">Tipo de Retención</div>
+        <p class=""><%- value?.retencion?.nombre %></p>
+    </div>
+    <div class="col-xs-6">
+        <div class="text-label">Tipo de Pago</div>
+        <p class=""><%- value?.pago?.nombre %></p>
+    </div>
+</div>
+<table class="table table-bordered" style="font-size: 12px;">
+    <thead>
+        <tr>
+            <th scope="col">Detalle</th>
+            <th scope="col">Importe</th>
+            <th scope="col">Impuestos / Retenciones</th>
+            <th scope="col">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% value?.item?.forEach((item,index) => { %>
+            <tr>
+                <td>
+                    <p class="text-label">Partida:</p>
+                    <p><%= item?.detalle?.value?.presupuesto?.partidaPresupuestaria?.descripcion %></p>
+                    <p class="text-label">Detalle Presupuestario:</p>
+                    <p><%= item?.detalle?.value?.item?.descripcion %></p>
+                    <p class="text-label">Descripción:</p>
+                    <p><%= item?.detalleAdicional %></p>
+                    <p class="text-label">Tipo de Impuesto:</p>
+                    <p><%= item?.tipoImpuesto?.nombre %></p>
+                </td>
+                <td>
+                    <p class="text-label">Importe:</p>
+                    <p><%= item?.monto %></p>
+                    <p class="text-label">Multa:</p>
+                    <p><%= item?.multa %></p>
+                    <p class="text-label">Devengado:</p>
+                    <p><%= item?.devengado %></p>
+                </td>
+                <td>
+                    <p class="text-label">Retención:</p>
+                    <p><%= item?.retencion %></p>
+                    <p class="text-label">IVA:</p>
+                    <p><%= item?.iva.toFixed(2) %></p>
+                    <p class="text-label">IT:</p>
+                    <p><%= item?.it.toFixed(2) %></p>
+                    <p class="text-label">IUE:</p>
+                    <p><%= item?.iue.toFixed(2) %></p>
+                </td>
+                <td>
+                    <p class="text-label">Total Solicitado:</p>
+                    <p><%= item?.detalle?.value?.monto?.certificado %></p>
+                    <p class="text-label">Total Consumido:</p>
+                    <p><%= item?.total - item?.retencion %></p>
+                    <p class="text-label">Liquido Pagable:</p>
+                    <p><%= item?.liquidoPagable %></p>
+                    <p class="text-label">Total:</p>
+                    <p><%= item?.total %></p>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
