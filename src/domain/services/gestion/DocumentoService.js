@@ -20,6 +20,7 @@ const QRCode = require("qrcode");
 const { fromBuffer } = require("pdf2pic");
 const jsQR = require("jsqr");
 const { createCanvas, loadImage } = require("canvas");
+const axios = require('axios');
 
 let browser;
 async function initBrowser() {
@@ -1512,7 +1513,14 @@ module.exports = function documentoService (repositories, helpers, res) {
           marginRight : (documento?.plantilla?.configuracionPagina?.margenDerecho || 3) + 'cm',
           shortCodes  : shortCodes
         });
-        const header = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
+        
+        const headerUrl = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
+        const headerPath = `/tmp/header_${documento.id}.html`;
+
+        const responseHeader = await axios.get(headerUrl);
+        fs.writeFileSync(headerPath, responseHeader.data);
+
+        const header = headerPath;
         //const header = '/tmp/header_test.html';
         const footer =  `${config.app.BACKEND_URL_LOCAL}/public/generarFooterPdfDocumento?tipo=${documento.plantilla.idCategoria}&id=${documento.id}&idUsuario=${idUsuario}`;
         const options = {
