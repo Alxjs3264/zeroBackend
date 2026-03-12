@@ -1512,8 +1512,8 @@ module.exports = function documentoService (repositories, helpers, res) {
           marginRight : (documento?.plantilla?.configuracionPagina?.margenDerecho || 3) + 'cm',
           shortCodes  : shortCodes
         });
-        //const header = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
-        const header = '/tmp/header_test.html';
+        const header = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
+        //const header = '/tmp/header_test.html';
         const footer =  `${config.app.BACKEND_URL_LOCAL}/public/generarFooterPdfDocumento?tipo=${documento.plantilla.idCategoria}&id=${documento.id}&idUsuario=${idUsuario}`;
         const options = {
           pageSize     : documento?.plantilla?.configuracionPagina?.tamanioPagina?.nombre === 'OFICIO' ? 'legal' : 'letter' || 'letter',
