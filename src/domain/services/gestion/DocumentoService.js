@@ -961,9 +961,11 @@ module.exports = function documentoService (repositories, helpers, res) {
 
     const opt = {
       dpi           : 72,
-      headerHtml    : header,
-      footerHtml    : footer,
-      footerSpacing : 2,
+  "header-html": header,
+  "footer-html": footer,
+
+  "header-spacing": 5,
+  "footer-spacing": 2,
       // pageSize      : pdfOptions.pageSize     || 'letter',
       marginLeft    : pdfOptions.marginLeft   || '4cm',
       marginRight   : pdfOptions.marginRight  || '3cm',
@@ -1383,7 +1385,8 @@ module.exports = function documentoService (repositories, helpers, res) {
       pageSize     : documento?.plantilla?.configuracionPagina?.tamanioPagina?.nombre === 'OFICIO' ? 'legal' : 'letter' || 'letter',
       marginLeft   : '0cm',
       marginRight  : '0cm',
-      marginTop    : (documento?.plantilla?.configuracionPagina?.margenSuperior || 3)  + 'cm',
+      //marginTop    : (documento?.plantilla?.configuracionPagina?.margenSuperior || 3)  + 'cm',
+      marginTop: '6cm'
       marginBottom : (documento?.plantilla?.configuracionPagina?.margenInferior || 3) + 'cm',
       output       : tempHeaderFooterPDF
     };
