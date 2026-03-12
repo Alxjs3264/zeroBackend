@@ -954,9 +954,15 @@ module.exports = function documentoService (repositories, helpers, res) {
   async function createPdf (html, pdfOptions = {}, header, footer) {
     const opt = {
       dpi           : 72,
-      headerHtml    : header,
+      /*headerHtml    : header,
       footerHtml    : footer,
-      footerSpacing : 2,
+      footerSpacing : 2, */
+        headerLeft: 'ENCABEZADO TEST',
+  headerRight: '[page]',
+  headerFontSize: 10,
+
+  footerCenter: 'FOOTER TEST',
+  footerSpacing: 2,
       // pageSize      : pdfOptions.pageSize     || 'letter',
       marginLeft    : pdfOptions.marginLeft   || '4cm',
       marginRight   : pdfOptions.marginRight  || '3cm',
@@ -1506,7 +1512,8 @@ module.exports = function documentoService (repositories, helpers, res) {
           marginRight : (documento?.plantilla?.configuracionPagina?.margenDerecho || 3) + 'cm',
           shortCodes  : shortCodes
         });
-        const header = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
+        //const header = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
+        const header = '/tmp/header_test.html';
         const footer =  `${config.app.BACKEND_URL_LOCAL}/public/generarFooterPdfDocumento?tipo=${documento.plantilla.idCategoria}&id=${documento.id}&idUsuario=${idUsuario}`;
         const options = {
           pageSize     : documento?.plantilla?.configuracionPagina?.tamanioPagina?.nombre === 'OFICIO' ? 'legal' : 'letter' || 'letter',
