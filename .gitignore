@@ -5,3 +5,7 @@ node_modules/
 .DS_Store
 public/uploads/
 tmp/
+files/documentos
+public/adjuntos
+src/common/config/app.js
+src/common/config/db.js
