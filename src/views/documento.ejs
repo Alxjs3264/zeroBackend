@@ -171,6 +171,7 @@
         <div style="display:flex; justify-content:space-between;">
             <div>
             <img src="http://localhost:3001/public/images/sepdavi.png" style="height:90px;">
+            <img src="file://home/sepdavi/zero/backend-gestion-documental-main/public/images/sepdavi.png">
             </div>
 
             <div style="text-align:right;">
@@ -180,9 +181,9 @@
         </div>
         <hr>
     </div>
-    <pre>
-    <%= JSON.stringify(documento, null, 2) %>
-    </pre>
+<pre>
+<%= JSON.stringify({documento, referencias, adjuntos, shortCodes}, null, 2) %>
+</pre>
     <section id="render-container">
         <% var count = 0 %>
         
