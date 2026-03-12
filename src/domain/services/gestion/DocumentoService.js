@@ -976,8 +976,8 @@ module.exports = function documentoService (repositories, helpers, res) {
       // pageSize      : pdfOptions.pageSize     || 'letter',
       marginLeft    : pdfOptions.marginLeft   || '4cm',
       marginRight   : pdfOptions.marginRight  || '3cm',
-      marginTop     : '0cm',
-      marginBottom  : '0cm',
+      marginTop     : '1cm',
+      marginBottom  : '1cm',
       output        : pdfOptions.output       || '/tmp/documento.pdf'
       // footerFontSize : 8,
       // footerRight    : '[page] de [toPage]',
