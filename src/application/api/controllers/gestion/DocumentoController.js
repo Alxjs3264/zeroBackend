@@ -455,7 +455,7 @@ module.exports = function setupComponenteController (services) {
         }
         if (user.usuario.idEntidad === '6f732b79-0356-4aa6-bba6-254d09fff9d4') {
           dimension = 'height="120"';
-          logo = 'logo_sepdavi.png';
+          logo = 'sepdavi.png';
           const sep1 = path.resolve('public/images/sep1.png');
           const sep2 = path.resolve('public/images/sep2.png');
 
