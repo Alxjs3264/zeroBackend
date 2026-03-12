@@ -165,14 +165,25 @@
             -webkit-line-clamp: 1;
         }
     </style>
+    <style>
+        #pdf-header{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+        }
+
+        #pdf-content{
+            margin-top: 110px;
+        }
+    </style>
 </head>
 <body>
-<div style="width:100%; border-bottom:1px solid #000; padding-bottom:8px; margin-bottom:15px;">
+<div id="pdf-header" style="border-bottom:1px solid #000; padding-bottom:8px;">
   <table style="width:100%; font-size:11px;">
     <tr>
-      
       <td style="width:40%;">
-        <!-- logo -->
         <img src="http://127.0.0.1:3001/public/images/sepdavi.png" style="height:70px;">
       </td>
 
@@ -181,10 +192,10 @@
         <div><strong>Cite:</strong> <%= documento?.cite || '' %></div>
         <div><strong>Fecha:</strong> <%= shortCodes['{{_fechaDocumento_}}'] || '' %></div>
       </td>
-
     </tr>
   </table>
 </div>
+<div id="pdf-content">
     <section id="render-container">
         <% var count = 0 %>
         
@@ -431,6 +442,7 @@
         <% } %>
         </div>
     </section>
+    </div>
 </body>
 
 </html>
