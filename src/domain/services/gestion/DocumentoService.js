@@ -954,15 +954,9 @@ module.exports = function documentoService (repositories, helpers, res) {
   async function createPdf (html, pdfOptions = {}, header, footer) {
     const opt = {
       dpi           : 72,
-      /*headerHtml    : header,
+      headerHtml    : header,
       footerHtml    : footer,
-      footerSpacing : 2, */
-        headerLeft: 'ENCABEZADO TEST',
-  headerRight: '[page]',
-  headerFontSize: 10,
-
-  footerCenter: 'FOOTER TEST',
-  footerSpacing: 2,
+      footerSpacing : 2,
       // pageSize      : pdfOptions.pageSize     || 'letter',
       marginLeft    : pdfOptions.marginLeft   || '4cm',
       marginRight   : pdfOptions.marginRight  || '3cm',
