@@ -22,6 +22,10 @@
             width: <%= usableWidth %>;
             min-width: <%= usableWidth %>;
             max-width: <%= usableWidth %>;
+        },
+        .header{
+            width:100%;
+            margin-bottom:20px;
         }
     </style>
 <% } else { %>
@@ -162,18 +166,21 @@
         }
     </style>
 </head>
-
-<div style="
-  width:100%;
-  text-align:center;
-  font-size:14px;
-  border-bottom:1px solid black;
-  padding-bottom:10px;
-  margin-bottom:20px;
-">
-  ENCABEZADO TEST
-</div>
 <body>
+    <div class="header">
+        <div style="display:flex; justify-content:space-between;">
+            <div>
+                <strong>LOGO / INSTITUCIÓN</strong>
+            </div>
+
+            <div style="text-align:right;">
+                <div>CITE: <%= documento?.cite %></div>
+                <div>Fecha: <%= documento?.fechaDocumento %></div>
+            </div>
+        </div>
+
+        <hr>
+    </div>
     <section id="render-container">
         <% var count = 0 %>
         
