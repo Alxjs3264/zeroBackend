@@ -958,9 +958,19 @@ module.exports = function documentoService (repositories, helpers, res) {
       console.log("FOOTER URL:", footer); 
       console.log("OUTPUT:", pdfOptions.output)
 
+      const headerTestPath = '/tmp/header_test.html';
+
+  fs.writeFileSync(headerTestPath, `
+  <html>
+  <body style="font-size:20px;color:red;">
+      HEADER TEST FUNCIONANDO
+  </body>
+  </html>
+  `);
+
     const opt = {
       dpi           : 72,
-      headerHtml: "<div>HEADER TEST</div>",
+      headerHtml: headerTestPath,
       footerHtml    : footer,
       footerSpacing : 2,
       // pageSize      : pdfOptions.pageSize     || 'letter',
