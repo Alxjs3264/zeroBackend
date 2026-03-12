@@ -426,8 +426,8 @@ module.exports = function setupComponenteController (services) {
   async function generarHeaderPdfGeneric (idDocumento) {
     const { rootPath } = config.app;
     let documento = {};
-    let sepdavi1 = 'sepdavi1.png';
-    let sepdavi2 = 'sepdavi2.png';
+    let sepdavi1;
+    let sepdavi2;
     let logo = 'sepdavi.png';
     let dimension = 'height="100"';
     let idCargo = null;
@@ -453,7 +453,7 @@ module.exports = function setupComponenteController (services) {
           dimension = 'height="100"';
           logo = 'sepmud.png';
         }
-        if (user.usuario.idEntidad === '7965b520-c30b-4e8c-a349-ba2d8bb5d466') {
+        if (user.usuario.idEntidad === '6f732b79-0356-4aa6-bba6-254d09fff9d4') {
           dimension = 'height="120"';
           logo = 'logo_sepdavi.png';
           const sep1 = path.resolve('public/images/sep1.png');
