@@ -167,9 +167,17 @@
     </style>
 </head>
 <body>
-    <div style="width:100%; border-bottom:1px solid #000; padding-bottom:10px;">
-  
-  <div>CITE: <%= documento.cite %></div>
+<div style="width:100%; border-bottom:1px solid #000; padding-bottom:10px;">
+  <table style="width:100%;">
+    <tr>
+      <td style="width:30%;">
+        <img src="http://127.0.0.1:3001/public/images/sepdavi.png" style="height:80px;">
+      </td>
+      <td style="text-align:right;">
+        <b>CITE:</b> <%= documento.cite %>
+      </td>
+    </tr>
+  </table>
 </div>
     <section id="render-container">
         <% var count = 0 %>

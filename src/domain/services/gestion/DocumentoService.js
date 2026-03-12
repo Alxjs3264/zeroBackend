@@ -1392,8 +1392,8 @@ module.exports = function documentoService (repositories, helpers, res) {
       pageSize     : documento?.plantilla?.configuracionPagina?.tamanioPagina?.nombre === 'OFICIO' ? 'legal' : 'letter' || 'letter',
       marginLeft   : '0cm',
       marginRight  : '0cm',
-      marginTop    : (documento?.plantilla?.configuracionPagina?.margenSuperior || 3)  + 'cm',
-      marginBottom : (documento?.plantilla?.configuracionPagina?.margenInferior || 3) + 'cm',
+      marginTop    : '0cm',
+      marginBottom : '0cm',
       output       : tempHeaderFooterPDF
     };
     const headerUrl = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
