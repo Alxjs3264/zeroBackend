@@ -167,23 +167,6 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div style="display:flex; justify-content:space-between;">
-            <div>
-            <img src="http://localhost:3001/public/images/sepdavi.png" style="height:90px;">
-            
-            </div>
-
-            <div style="text-align:right;">
-                <div>CITE: <%= documento?.citeDocumento %></div>
-                <div>Fecha: <%= documento?.fechaDocumento %></div>
-            </div>
-        </div>
-        <hr>
-    </div>
-<pre>
-<%= JSON.stringify({documento, referencias, adjuntos, shortCodes}, null, 2) %>
-</pre>
     <section id="render-container">
         <% var count = 0 %>
         

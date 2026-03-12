@@ -952,13 +952,21 @@ module.exports = function documentoService (repositories, helpers, res) {
   }
 
   async function createPdf (html, pdfOptions = {}, header, footer) {
+
+      console.log("============== DEBUG PDF ==============");
+      console.log("HEADER URL:", header);
+      console.log("FOOTER URL:", footer); 
+      console.log("OUTPUT:", pdfOptions.output)
+
     const opt = {
       dpi           : 72,
+      headerHtml    : header,
+      footerHtml    : footer,
       footerSpacing : 2,
       // pageSize      : pdfOptions.pageSize     || 'letter',
       marginLeft    : pdfOptions.marginLeft   || '4cm',
       marginRight   : pdfOptions.marginRight  || '3cm',
-      marginTop     : pdfOptions.marginTop    || '3cm',
+      marginTop     : pdfOptions.marginTop    || '6cm',
       marginBottom  : pdfOptions.marginBottom || '4cm',
       output        : pdfOptions.output       || '/tmp/documento.pdf'
       // footerFontSize : 8,
