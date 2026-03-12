@@ -426,9 +426,9 @@ module.exports = function setupComponenteController (services) {
   async function generarHeaderPdfGeneric (idDocumento) {
     const { rootPath } = config.app;
     let documento = {};
-    let sepdavi1;
-    let sepdavi2;
-    let logo = 'logo_oficial-ministerio_de_la_presidencia.png';
+    let sepdavi1 = 'sepdavi1.png';
+    let sepdavi2 = 'sepdavi2.png';
+    let logo = 'sepdavi.png';
     let dimension = 'height="100"';
     let idCargo = null;
     if (idDocumento !== 'no-document') {
@@ -670,10 +670,10 @@ module.exports = function setupComponenteController (services) {
     const documento = JSON.parse(contenidoDocumento);
     const documentoBuscar = await DocumentoService.findOne({ id: idDocumento });
     const docFisico = documentoBuscar?.flujoDocumental?.solicitudPlantilla?.docfisico ?? false;
-    let entidad = 'MINISTERIO DE LA PRESIDENCIA';
-    let ubicacion = 'Zona Central - Calle Ayacucho Esq. Potosí';
-    let contacto = '+591 (2) 218 41 78';
-    let subcontenido = 'www.justicia.gob.bo';
+    let entidad = 'SERVICIO PLURINACIONAL DE ASISTENCIA A LA VÍCTIMA';
+    let ubicacion = 'Av. Mariscal Santa Cruz Esquina Calle Colombia, Edif. Cámara Nacional de Comercio Nº 1392, Piso 14.';
+    let contacto = '+591 (2) 233 41 41';
+    let subcontenido = 'www.sepdavi.gob.bo';
     const permite_confidencial = documento.plantilla?.permite_confidencial;
     const de = documento.plantilla?.configuracion_json?.find(x => x.type === 'derivacion').value.valores.de;
     const user = Array.isArray(de) ? de.pop() : de;
