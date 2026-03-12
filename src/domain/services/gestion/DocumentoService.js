@@ -952,32 +952,16 @@ module.exports = function documentoService (repositories, helpers, res) {
   }
 
   async function createPdf (html, pdfOptions = {}, header, footer) {
-
-      console.log("============== DEBUG PDF ==============");
-      console.log("HEADER URL:", header);
-      console.log("FOOTER URL:", footer); 
-      console.log("OUTPUT:", pdfOptions.output)
-
-      const headerTestPath = '/tmp/header_test.html';
-
-  fs.writeFileSync(headerTestPath, `
-  <html>
-  <body style="font-size:20px;color:red;">
-      HEADER TEST FUNCIONANDO
-  </body>
-  </html>
-  `);
-
     const opt = {
       dpi           : 72,
-      headerHtml: headerTestPath,
+      headerHtml    : header,
       footerHtml    : footer,
       footerSpacing : 2,
       // pageSize      : pdfOptions.pageSize     || 'letter',
       marginLeft    : pdfOptions.marginLeft   || '4cm',
       marginRight   : pdfOptions.marginRight  || '3cm',
-      marginTop     : '1cm',
-      marginBottom  : '1cm',
+      marginTop     : pdfOptions.marginTop    || '3cm',
+      marginBottom  : pdfOptions.marginBottom || '4cm',
       output        : pdfOptions.output       || '/tmp/documento.pdf'
       // footerFontSize : 8,
       // footerRight    : '[page] de [toPage]',
@@ -1392,8 +1376,8 @@ module.exports = function documentoService (repositories, helpers, res) {
       pageSize     : documento?.plantilla?.configuracionPagina?.tamanioPagina?.nombre === 'OFICIO' ? 'legal' : 'letter' || 'letter',
       marginLeft   : '0cm',
       marginRight  : '0cm',
-      marginTop    : '0cm',
-      marginBottom : '0cm',
+      marginTop    : (documento?.plantilla?.configuracionPagina?.margenSuperior || 3)  + 'cm',
+      marginBottom : (documento?.plantilla?.configuracionPagina?.margenInferior || 3) + 'cm',
       output       : tempHeaderFooterPDF
     };
     const headerUrl = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
@@ -1523,7 +1507,6 @@ module.exports = function documentoService (repositories, helpers, res) {
           shortCodes  : shortCodes
         });
         const header = `${config.app.BACKEND_URL_LOCAL}/public/generarHeaderPdfDocumento/${documento.id}?idUsuario=${idUsuario}`;
-        //const header = '/tmp/header_test.html';
         const footer =  `${config.app.BACKEND_URL_LOCAL}/public/generarFooterPdfDocumento?tipo=${documento.plantilla.idCategoria}&id=${documento.id}&idUsuario=${idUsuario}`;
         const options = {
           pageSize     : documento?.plantilla?.configuracionPagina?.tamanioPagina?.nombre === 'OFICIO' ? 'legal' : 'letter' || 'letter',
