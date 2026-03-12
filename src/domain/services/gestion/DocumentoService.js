@@ -1385,8 +1385,7 @@ module.exports = function documentoService (repositories, helpers, res) {
       pageSize     : documento?.plantilla?.configuracionPagina?.tamanioPagina?.nombre === 'OFICIO' ? 'legal' : 'letter' || 'letter',
       marginLeft   : '0cm',
       marginRight  : '0cm',
-      //marginTop    : (documento?.plantilla?.configuracionPagina?.margenSuperior || 3)  + 'cm',
-      marginTop: '6cm'
+      marginTop    : (documento?.plantilla?.configuracionPagina?.margenSuperior || 3)  + 'cm',
       marginBottom : (documento?.plantilla?.configuracionPagina?.margenInferior || 3) + 'cm',
       output       : tempHeaderFooterPDF
     };
