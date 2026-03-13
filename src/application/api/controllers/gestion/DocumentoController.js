@@ -459,8 +459,8 @@ module.exports = function setupComponenteController (services) {
           const sep1 = path.resolve('public/images/sep1.png');
           const sep2 = path.resolve('public/images/sep2.png');
 
-          sepdavi1 = fs.readFileSync(sep1, 'base64');
-          sepdavi2 = fs.readFileSync(sep2, 'base64');
+          sepdavi1 = 'sep1.png';
+          sepdavi2 = 'sep2.png';
         }
       } else {
         if (de.usuario.idEntidad === 'eff93c2b-9c4c-4155-8062-f737ce5525d3') {
