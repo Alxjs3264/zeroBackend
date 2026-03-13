@@ -153,9 +153,13 @@
             <!-- <div class="col-xs-5 text-right"></div> -->
             <% if(documento && documento.createdAt && new Date("6/19/24") < new Date(documento.createdAt.replace(/(\d{2})-(\d{2})-(\d{4}) (\d{2}:\d{2}:\d{2})/, '$3-$2-$1T$4' )) && sepdavi1 && sepdavi2) { %>
             <div class="sepdavi" align="center">
-                <!-- <div align="center"><img style="width: 75px;" src="<%= `data:image/png;base64,${sepdavi1}`%>" /></div> -->
-                <img height="75" src="file:///home/sepdavi/zero/backend-gestion-documental-main/public/images/sep1.png">
-                <div align="center"><img style="width: 100px;" src="<%= `data:image/png;base64,${sepdavi2}`%>" /></div>
+                <div style="transform: scale(0.6); transform-origin: top center;">
+                    <img height="120" src="<%= `data:image/png;base64,${sepdavi1}` %>" />
+                </div>
+
+                <div style="transform: scale(0.6); transform-origin: top center;">
+                    <img height="150" src="<%= `data:image/png;base64,${sepdavi2}` %>" />
+                </div>
             </div>
             <% } %>
         </div>
