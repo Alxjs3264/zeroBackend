@@ -459,8 +459,8 @@ module.exports = function setupComponenteController (services) {
           const sep1 = path.resolve('public/images/sep1.png');
           const sep2 = path.resolve('public/images/sep2.png');
 
-          sepdavi1 = 'sep1.png';
-          sepdavi2 = 'sep2.png';
+          sepdavi1 = fs.readFileSync(sep1, 'base64');
+          sepdavi2 = fs.readFileSync(sep2, 'base64');
         }
       } else {
         if (de.usuario.idEntidad === 'eff93c2b-9c4c-4155-8062-f737ce5525d3') {
@@ -670,9 +670,9 @@ module.exports = function setupComponenteController (services) {
     const documento = JSON.parse(contenidoDocumento);
     const documentoBuscar = await DocumentoService.findOne({ id: idDocumento });
     const docFisico = documentoBuscar?.flujoDocumental?.solicitudPlantilla?.docfisico ?? false;
-    let entidad = 'SERVICIO PLURINACIONAL DE ASISTENCIA A LA VÍCTIMA';
+    let entidad = 'SEPDAVI';
     let ubicacion = 'Av. Mariscal Santa Cruz Esquina Calle Colombia, Edif. Cámara Nacional de Comercio Nº 1392, Piso 14.';
-    let contacto = '+591 (2) 233 41 41';
+    let contacto = '+591 (2) 2334141';
     let subcontenido = 'www.sepdavi.gob.bo';
     const permite_confidencial = documento.plantilla?.permite_confidencial;
     const de = documento.plantilla?.configuracion_json?.find(x => x.type === 'derivacion').value.valores.de;
