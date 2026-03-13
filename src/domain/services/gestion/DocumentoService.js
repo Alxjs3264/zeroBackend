@@ -958,6 +958,7 @@ module.exports = function documentoService (repositories, helpers, res) {
       footerHtml    : footer,
       imageQuality  : 100,
       footerSpacing : 2,
+      enableLocalFileAccess: true,
       // pageSize      : pdfOptions.pageSize     || 'letter',
       marginLeft    : pdfOptions.marginLeft   || '4cm',
       marginRight   : pdfOptions.marginRight  || '3cm',
